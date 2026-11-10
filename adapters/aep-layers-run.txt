@@ -1,0 +1,13 @@
+valid/hybrid-mldsa65	agrees	hash+jcs
+valid/mcp-tools-call-denied-policy	agrees	legacy response-only form
+valid/mcp-tools-call-valid	agrees	legacy response-only form
+valid/minimal-roundtrip	agrees	hash+jcs
+valid/valid-overt-profile	agrees	legacy response-only form
+invalid/bad-signature-classical	agrees	legacy response-only form
+invalid/bad-signature-pqc	agrees	hash+jcs
+invalid/bad-timestamp	agrees	legacy response-only form
+invalid/missing-canonical-bin	cannot-tell	missing canonical.bin
+invalid/tampered-canonical-bin	contradicted	hash=False jcs-form=False
+invalid/tampered-metadata	agrees	legacy response-only form
+invalid/tampered-overt-receipt	agrees	legacy response-only form
+invalid/untrusted-issuer	agrees	legacy response-only form

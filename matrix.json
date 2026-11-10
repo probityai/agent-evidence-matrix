@@ -1,0 +1,187 @@
+{
+ "reader": {
+  "agent-evidence-vectors": "0.36.3",
+  "agent-evidence-verify": "0.5.0"
+ },
+ "verdicts": [
+  "agrees",
+  "contradicted",
+  "cannot-tell",
+  "unsupported",
+  "not run"
+ ],
+ "total_projects": 12,
+ "projects": [
+  {
+   "id": 1,
+   "name": "AER-1 execution receipts",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "not run in this matrix"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "name": "Action Evidence Packages",
+   "cells": [
+    {
+     "cell": "JCS function against vectors-a2a-jcs-v01 (rfc8785 target)",
+     "source": "our adapter",
+     "verdict": "contradicted",
+     "detail": "2 of 53",
+     "evidence": "adapters/eatf-jcs-run.txt: A5-002 (1e21) and A5-012 (1e20) refused, 51 of 53 agree"
+    },
+    {
+     "cell": ".aep packages, hash and JCS layers",
+     "source": "their records",
+     "verdict": "agrees",
+     "detail": "11 of 13; 1 cannot-tell; 1 contradicted (the intended tamper)",
+     "evidence": "adapters/aep-layers-run.txt"
+    },
+    {
+     "cell": "signatures, timestamp, ML-DSA",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "adapter reads no keys"
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "name": "Agent credential conformance",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "not run in this matrix"
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "name": "Agent action evidence interop",
+   "cells": [
+    {
+     "cell": "audit-record and approval-binding readers in the champion's CI",
+     "source": "their records",
+     "verdict": "not run",
+     "evidence": "the project reports 217/217 and 37/37 in its own interop README; not reproduced here"
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "name": "Agent memory integrity",
+   "cells": [
+    {
+     "cell": "results/report-v01.json through --read-w3c-report",
+     "source": "their records",
+     "verdict": "agrees",
+     "evidence": "adapters/agmi-w3c-report-run.txt: conforms, exit 0"
+    },
+    {
+     "cell": "submissions/w3c-agent-conformance-v1.json",
+     "source": "their records",
+     "verdict": "unsupported",
+     "evidence": "refused on shape: a different wrapper than report/v0.1"
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "name": "Independent time anchoring",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "not run in this matrix"
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "name": "TTTPS and AUDIT testbed",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "not run in this matrix"
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "name": "WEXP Appraisal Core with SCITT",
+   "cells": [
+    {
+     "cell": "Core-02 corpora 001 and 002 (89 + 35 cases) through wexp_check against the frozen expectations",
+     "source": "their records",
+     "verdict": "agrees",
+     "detail": "124 of 124",
+     "evidence": "adapters/wexp-run.txt (adapters/wexp_adapter.py)"
+    },
+    {
+     "cell": "an agent-audit-record member mapped to a normalized Core-02 input",
+     "source": "our adapter",
+     "verdict": "not run",
+     "evidence": "mapping needs the champion's input; row ADP-WEXP-1"
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "name": "Formal model of MCP Authorization",
+   "cells": [
+    {
+     "cell": "Tamarin model",
+     "source": "none",
+     "verdict": "unsupported",
+     "evidence": "no records emitted"
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "name": "DNS Based Agent Discovery",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "unsupported",
+     "evidence": "discovery records, not evidence records"
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "name": "DAWN ARD",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "unsupported",
+     "evidence": "manifests, not evidence records"
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "name": "ICON observability",
+   "cells": [
+    {
+     "cell": "whole",
+     "source": "none",
+     "verdict": "unsupported",
+     "evidence": "no signed or hashed record format read"
+    }
+   ]
+  }
+ ]
+}

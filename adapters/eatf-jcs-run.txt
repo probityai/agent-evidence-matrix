@@ -1,0 +1,3 @@
+FAIL A5-002: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-012: refused: refused on input that has a canonical form (exit 1)
+a2a-agent-card-canonicalization-conformance target rfc8785: executed 53 of 53, 51 pass; report /home/sgilda/Documents/.lanes/ietf127-hack-1110/research/1283-ietf127-hackathon-2026-11-10/adapters/eatf-jcs-report.json

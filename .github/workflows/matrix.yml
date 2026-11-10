@@ -1,0 +1,31 @@
+name: matrix
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python build_matrix.py
+      - run: git diff --exit-code MATRIX.md
+  corpus-jcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - uses: probityai/agent-evidence-vectors@v0.36.3
+        env:
+          A2A_JCS_TARGET: rfc8785
+        with:
+          corpus: vectors-a2a-jcs-v01
+          verifier: python adapters/rfc8785_cli.py

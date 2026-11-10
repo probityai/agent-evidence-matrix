@@ -1,0 +1,10 @@
+# agmi report-v01.json read by the packaged w3c-report reader (agent-evidence-vectors 0.36.3)
+command: agent-evidence-vectors --read-w3c-report <file>
+== results/report-v01.json
+conforms
+rc=0
+== submissions/w3c-agent-conformance-v1.json
+shape: the report does not declare format 'public-agent-conformance/report/v0.1'
+shape: checks is not a list
+shape: the report declares no domain object with a string id
+rc=1
