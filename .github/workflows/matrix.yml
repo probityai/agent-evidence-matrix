@@ -22,10 +22,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r requirements.txt
+      # The Action runs its own Python, so the canonicalizer is installed beside the adapter and found through PYTHONPATH.
+      - run: pip install --target vendor rfc8785==0.1.4
       - uses: probityai/agent-evidence-vectors@v0.36.3
         env:
           A2A_JCS_TARGET: rfc8785
+          PYTHONPATH: ${{ github.workspace }}/vendor
         with:
           corpus: vectors-a2a-jcs-v01
           verifier: python adapters/rfc8785_cli.py
