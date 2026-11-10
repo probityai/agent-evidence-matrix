@@ -25,3 +25,4 @@ Status: first run from the IETF 127 Hackathon, 10 November 2026. Add a project b
 | [MATRIX.md](MATRIX.md) | the table |
 | [matrix.json](matrix.json) | the cells, source of the table |
 | [adapters/](adapters) | the adapters and their recorded runs |
+| [libraries/RESULTS.md](libraries/RESULTS.md) | RFC 8785 and DSSE cross-library run at current releases: 20,121 of 20,140 JCS cases agree byte for byte, DSSE PAE agrees 400 of 400 |
