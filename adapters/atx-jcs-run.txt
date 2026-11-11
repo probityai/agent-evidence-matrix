@@ -1,0 +1,17 @@
+# vectors-a2a-jcs-v01 (agent-evidence-vectors v0.36.3, corpus digest 29b3f2c5a9c2e6b07dc7e925b13c81563e2efd407a62ce05df513fca04e9361c), rfc8785 target, through adapters/atx_jcs_cli.py
+# canonicalizer: verifiers/python/rfc8785.py of https://github.com/opena2a-standards/atx-conformance at 5f260e15eaadd92b290303e54384a3a30342f804 (ATX_CONFORMANCE points at that clone)
+# replayed outside the packaged harness, by a local script that applies the contract of docs/reference/corpus-readers.md (one run per vector, input_raw for a reject, numbers as the vector spells them, exit 0 + canonical_utf8_hex or exit 1); the packaged harness was not run
+# every refusal below is a vector whose input holds a floating-point number: the serializer refuses those by design (verifiers/python/rfc8785.py, _serialize_number), because the ATX v1.1 signed object carries no such number (atx-spec core.md 1.3a.2 rule 3)
+command: A2A_JCS_TARGET=rfc8785 agent-evidence-vectors --corpus vectors-a2a-jcs-v01 --verifier "python adapters/atx_jcs_cli.py"   (the packaged form; not what produced the lines below)
+FAIL A5-001: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-002: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-006: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-007: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-008: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-010: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-011: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-012: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-013: refused: refused on input that has a canonical form (exit 1)
+FAIL A5-015: refused: refused on input that has a canonical form (exit 1)
+FAIL A6-005: refused: refused on input that has a canonical form (exit 1)
+a2a-agent-card-canonicalization-conformance target rfc8785: executed 53 of 53, 42 pass; {"pass": 42, "diverged": 0, "refused": 11, "accepted": 0, "errored": 0}

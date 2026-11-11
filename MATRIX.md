@@ -2,7 +2,7 @@
 
 Reader: agent-evidence-vectors 0.36.3, agent-evidence-verify 0.5.0.
 
-Coverage: 3 of 12 projects have at least one cell with a result (agrees, contradicted or cannot-tell).
+Coverage: 4 of 13 projects have at least one cell with a result (agrees, contradicted or cannot-tell).
 
 Source: "their records" = the project's own record bytes were read; "our adapter" = code in adapters/ carried their record to our reader or their code to our corpus.
 
@@ -24,3 +24,6 @@ Source: "their records" = the project's own record bytes were read; "our adapter
 | 10 | DNS Based Agent Discovery | whole | none | unsupported | discovery records, not evidence records |
 | 11 | DAWN ARD | whole | none | unsupported | manifests, not evidence records |
 | 12 | ICON observability | whole | none | unsupported | no signed or hashed record format read |
+| 13 | ATX (Agent Trust eXtension) credentials | records/atx (5 conformance fixtures: v1.0 pipe form and v1.1 JCS form), canonical signing bytes and Ed25519 layer | their records | agrees (3 of 5; 2 contradicted (the intended tampers)) | adapters/atx-layers-run.txt (adapters/atx_layers.py) |
+| 13 | ATX (Agent Trust eXtension) credentials | ML-DSA-65 entries, validity window, trusted-issuer set, revocation, distinct-authority count | none | not run | adapter reads no ML-DSA-65 key; the project's reference verifiers cover these (records/atx/README.md) |
+| 13 | ATX (Agent Trust eXtension) credentials | JCS function (the suite's vendored RFC 8785 serializer) against vectors-a2a-jcs-v01 (rfc8785 target) | our adapter | contradicted (11 of 53) | adapters/atx-jcs-run.txt: the 11 floating-point vectors refused by design (ATX signs no such number), 42 of 53 agree; replayed outside the packaged harness |
