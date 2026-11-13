@@ -1,0 +1,10 @@
+# records/atx/*.json read by adapters/atx_layers.py (rfc8785 0.1.4, cryptography 50.0.2, Python 3.14.3)
+# each record is fixtures/<name>.json of https://github.com/opena2a-standards/atx-conformance at 5f260e15eaadd92b290303e54384a3a30342f804, byte for byte; sha256 as that commit's MANIFEST.sha256 pins
+# ML-DSA-65 entries are not read here; the validity window, trusted-issuer set, revocation and the authority count are not read here
+command: python adapters/atx_layers.py records/atx
+baseline-valid.json	agrees	legacy-form ed25519 1/1 verified; record expects ACCEPT	sha256=e9b95fcb5565ae61d33c1a14f7ca92268bb77b81cb456c9a7d469a5de8e4bfb9
+tampered-signature.json	contradicted	legacy-form ed25519 0/1 verified; record expects REJECT	sha256=d42c1287b7d0241c5fc653803a5ca00d5b664f13f4597709b4f5c8d5e4a299c4
+v1_1-baseline-valid-hybrid.json	agrees	jcs-form ed25519 1/1 verified; 1 ML-DSA-65 entry not read; record expects ACCEPT	sha256=2cf922dc14c1ec05d537e034cbbe19793cbd41153e7b98107cab773c890b07ce
+v1_1-baseline-valid.json	agrees	jcs-form ed25519 1/1 verified; record expects ACCEPT	sha256=40c1650fc200a8131d9f5e211e96f372021511c3a87f93ffee06708e0abd3d5a
+v1_1-tampered-capabilities.json	contradicted	jcs-form ed25519 0/1 verified; record expects REJECT	sha256=c8953c399bccd037163366a6f058bae86ceadc763fa93c52eb1e88fb47546575
+rc=0

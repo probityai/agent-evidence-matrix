@@ -10,7 +10,7 @@
   "unsupported",
   "not run"
  ],
- "total_projects": 12,
+ "total_projects": 13,
  "projects": [
   {
    "id": 1,
@@ -180,6 +180,32 @@
      "source": "none",
      "verdict": "unsupported",
      "evidence": "no signed or hashed record format read"
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "name": "ATX (Agent Trust eXtension) credentials",
+   "cells": [
+    {
+     "cell": "records/atx (5 conformance fixtures: v1.0 pipe form and v1.1 JCS form), canonical signing bytes and Ed25519 layer",
+     "source": "their records",
+     "verdict": "agrees",
+     "detail": "3 of 5; 2 contradicted (the intended tampers)",
+     "evidence": "adapters/atx-layers-run.txt (adapters/atx_layers.py)"
+    },
+    {
+     "cell": "ML-DSA-65 entries, validity window, trusted-issuer set, revocation, distinct-authority count",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "adapter reads no ML-DSA-65 key; the project's reference verifiers cover these (records/atx/README.md)"
+    },
+    {
+     "cell": "JCS function (the suite's vendored RFC 8785 serializer) against vectors-a2a-jcs-v01 (rfc8785 target)",
+     "source": "our adapter",
+     "verdict": "contradicted",
+     "detail": "11 of 53",
+     "evidence": "adapters/atx-jcs-run.txt: the 11 floating-point vectors refused by design (ATX signs no such number), 42 of 53 agree; replayed outside the packaged harness"
     }
    ]
   }

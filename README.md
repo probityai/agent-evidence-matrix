@@ -16,7 +16,7 @@ Rebuild the table and its coverage count:
 python build_matrix.py
 ```
 
-It prints `N of 12: 3` today and rewrites `MATRIX.md`. Each cell is marked "their records" (the project's own record bytes were read) or "our adapter" (code in `adapters/` carried their record to our reader, or their code to our corpus), and carries one of five verdicts: agrees, contradicted, cannot-tell, unsupported, not run.
+It prints `N of 13: 4` today and rewrites `MATRIX.md`. Each cell is marked "their records" (the project's own record bytes were read) or "our adapter" (code in `adapters/` carried their record to our reader, or their code to our corpus), and carries one of five verdicts: agrees, contradicted, cannot-tell, unsupported, not run.
 
 Status: first run from the IETF 127 Hackathon, 10 November 2026. Add a project by opening a pull request with a `matrix.json` entry, the adapter and its run output. CI rebuilds the table daily and replays the RFC 8785 corpus through `adapters/rfc8785_cli.py`.
 
