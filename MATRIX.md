@@ -2,7 +2,7 @@
 
 Reader: agent-evidence-vectors 0.36.3, agent-evidence-verify 0.5.0.
 
-Coverage: 3 of 12 projects have at least one cell with a result (agrees, contradicted or cannot-tell).
+Coverage: 4 of 13 projects have at least one cell with a result (agrees, contradicted or cannot-tell).
 
 Source: "their records" = the project's own record bytes were read; "our adapter" = code in adapters/ carried their record to our reader or their code to our corpus.
 
@@ -24,3 +24,9 @@ Source: "their records" = the project's own record bytes were read; "our adapter
 | 10 | DNS Based Agent Discovery | whole | none | unsupported | discovery records, not evidence records |
 | 11 | DAWN ARD | whole | none | unsupported | manifests, not evidence records |
 | 12 | ICON observability | whole | none | unsupported | no signed or hashed record format read |
+| 14 | AI Runtime Evidence Protocol (AIREP) | v0.2 beta lifecycle fixtures through the reference reconciler versus committed expected JSON | our adapter | agrees (11 of 11; expected FAILURE/MISSING/NOT_EVALUATED/INDETERMINATE preserved) | adapters/airep-run.txt (adapters/airep_adapter.py) |
+| 14 | AI Runtime Evidence Protocol (AIREP) | authorized/executed action digest equality: complete fixture | our adapter | agrees (supplied digests equal; no event-truth claim) | adapters/airep-run.txt (adapters/airep_adapter.py) |
+| 14 | AI Runtime Evidence Protocol (AIREP) | authorized/executed action digest equality: toctou-mismatch fixture | our adapter | contradicted (intentional unequal digests, despite valid signatures) | adapters/airep-run.txt (adapters/airep_adapter.py) |
+| 14 | AI Runtime Evidence Protocol (AIREP) | authorized/executed action digest equality: no-execution fixture | our adapter | cannot-tell (Execution absent; comparison NOT_EVALUATED; not proof of non-execution) | adapters/airep-run.txt (adapters/airep_adapter.py) |
+| 14 | AI Runtime Evidence Protocol (AIREP) | Certisyn consumer/verifier on original v0.2 handoff corpus v0.1: process, class, channels, observer and producer-crypto projection | our adapter | contradicted (17 agree, 1 contradicted (CLS-XT1 expected-projection defect); all 18 raw outputs reproduced byte-exact) | adapters/airep-run.txt (adapters/airep_adapter.py) |
+| 14 | AI Runtime Evidence Protocol (AIREP) | AIREP records through the shared agent-evidence-verify reader | none | not run | adapters/airep_adapter.py: only scoped AIREP replay; no general cross-format interoperability claim |
