@@ -10,7 +10,7 @@
   "unsupported",
   "not run"
  ],
- "total_projects": 12,
+ "total_projects": 13,
  "projects": [
   {
    "id": 1,
@@ -180,6 +180,53 @@
      "source": "none",
      "verdict": "unsupported",
      "evidence": "no signed or hashed record format read"
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "name": "AI Runtime Evidence Protocol (AIREP)",
+   "cells": [
+    {
+     "cell": "v0.2 beta lifecycle fixtures through the reference reconciler versus committed expected JSON",
+     "source": "our adapter",
+     "verdict": "agrees",
+     "detail": "11 of 11; expected FAILURE/MISSING/NOT_EVALUATED/INDETERMINATE preserved",
+     "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+    },
+    {
+     "cell": "authorized/executed action digest equality: complete fixture",
+     "source": "our adapter",
+     "verdict": "agrees",
+     "detail": "supplied digests equal; no event-truth claim",
+     "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+    },
+    {
+     "cell": "authorized/executed action digest equality: toctou-mismatch fixture",
+     "source": "our adapter",
+     "verdict": "contradicted",
+     "detail": "intentional unequal digests, despite valid signatures",
+     "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+    },
+    {
+     "cell": "authorized/executed action digest equality: no-execution fixture",
+     "source": "our adapter",
+     "verdict": "cannot-tell",
+     "detail": "Execution absent; comparison NOT_EVALUATED; not proof of non-execution",
+     "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+    },
+    {
+     "cell": "Certisyn consumer/verifier on original v0.2 handoff corpus v0.1: process, class, channels, observer and producer-crypto projection",
+     "source": "our adapter",
+     "verdict": "contradicted",
+     "detail": "17 agree, 1 contradicted (CLS-XT1 expected-projection defect); all 18 raw outputs reproduced byte-exact",
+     "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+    },
+    {
+     "cell": "AIREP records through the shared agent-evidence-verify reader",
+     "source": "none",
+     "verdict": "not run",
+     "evidence": "adapters/airep_adapter.py: only scoped AIREP replay; no general cross-format interoperability claim"
     }
    ]
   }

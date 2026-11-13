@@ -1,0 +1,85 @@
+source https://github.com/halvrenofviryel/ai-runtime-evidence-protocol
+commit 3d62af2a3c217939a3556b741550c2563430322f
+wire-version 0.2
+lifecycle-target v0.2.0-beta.1; external-target earlier r1 handoff corpus v0.1
+command: python -B adapters/airep_adapter.py ../ai-runtime-evidence-protocol
+environment Python 3.12.3 cryptography 48.0.0 jsonschema 4.25.1
+source-label: our adapter; reads existing AIREP record bytes and verifier code
+No network access, current clock, live runtime, or artifact generation in replay.
+input reports/beta-2026-09-08/release-validation/lifecycle/bindings.json sha256:c0e552bf23884a95f515ec6db3db1adf553951c7997137db293bb78789d4d289
+input reports/beta-2026-09-08/release-validation/lifecycle/revocation.json sha256:67267c40ca39c51a32679548c64af11f1d70e69abf45140a306d6d6e231826c9
+input reports/beta-2026-09-08/release-validation/lifecycle/independence.json sha256:b124ee583faee01755d531a71ff98db2e7adddc92e87ca243cb42b3748031951
+input examples/v02/fixtures/complete.json sha256:2352daee8cd47547919b2b624915f10b656457b0cffc2bc860e4e5f3d144bb8a
+input reports/beta-2026-09-08/release-validation/lifecycle/reconciliation.json sha256:c1dff47fb1e71a203cf28aa54446769b976bf0ecf9b2963130d292e157840eb8
+lifecycle/complete agrees summary={"counts":{"FAILURE":0,"INDETERMINATE":0,"MISSING":0,"NOT_EVALUATED":1,"SATISFIED":37},"status":"INCOMPLETE"} result-json-sha256:3e3e8dd3aa77fe5bc200ed2307b8fcc7d5955d6e516749d595677319f0c83439
+input examples/v02/fixtures/no-receipt.json sha256:e41bae0269aeb2475bdf9506afe271305034aace555198149c9b1fbccac73723
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/no-receipt.result.json sha256:b711e6eb1c19aa6f1c90248c6776c3a7dec0ecc0ff91e7eb10117830b627859c
+lifecycle/no-receipt agrees summary={"counts":{"FAILURE":0,"INDETERMINATE":0,"MISSING":2,"NOT_EVALUATED":3,"SATISFIED":13},"status":"INCOMPLETE"} result-json-sha256:1759679722ff4a18051bf1ed31ee2b7cae74946f3797bb36f3855d99d34b32d5
+input examples/v02/fixtures/no-execution.json sha256:ad82963d8a499bd176bf6ce13a4a18c8ae87bf11e8be91503c87ca8fbf34e480
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/no-execution.result.json sha256:4f4feb5fd5addd26c364682e27c0cbb7fb8edc06801c3d333986f9a081498a7a
+lifecycle/no-execution agrees summary={"counts":{"FAILURE":0,"INDETERMINATE":0,"MISSING":1,"NOT_EVALUATED":3,"SATISFIED":19},"status":"INCOMPLETE"} result-json-sha256:15424802beae7a8cf62b872dea0530b2f243ee694c63dca1084da7603e99630b
+input examples/v02/fixtures/toctou-mismatch.json sha256:2a98586bd95b0033bd51e7442910929ce39f2bff1fe45caa0bb18c3de00dba79
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/toctou-mismatch.result.json sha256:05c9ea526b189a20fc2f822181c8f55e82e5d22375502066c094d3acf25b2bbb
+lifecycle/toctou-mismatch agrees summary={"counts":{"FAILURE":1,"INDETERMINATE":0,"MISSING":0,"NOT_EVALUATED":1,"SATISFIED":36},"status":"FAILURE"} result-json-sha256:8af5c5ba29974ae6661f2be7100956bbe0d5c5151e8c76f006338e0919440065
+input examples/v02/fixtures/no-effect.json sha256:5d1cf787ff70f08547e9801b16cde42f888f82633f44d0b77e2e5407e9fe82c9
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/no-effect.result.json sha256:4678d4be5ab2da33ca729ebf4ec3b0813a170e476d22d61bb50236f3c6006924
+lifecycle/no-effect agrees summary={"counts":{"FAILURE":0,"INDETERMINATE":0,"MISSING":1,"NOT_EVALUATED":1,"SATISFIED":28},"status":"INCOMPLETE"} result-json-sha256:09049139b15be09ec4bfe1026380d5f429edd7bbf78497ede1183ab791ef1950
+input examples/v02/fixtures/same-executor.json sha256:62812598a8b691247a73926a319923ae0b75bd494e8d98324dd590ccf95b9399
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/same-executor.result.json sha256:d9bef0608e0eb0087c7428ae682c8c9eef3635f4cfe5bdc923108c90e0a940b2
+lifecycle/same-executor agrees summary={"counts":{"FAILURE":0,"INDETERMINATE":0,"MISSING":0,"NOT_EVALUATED":1,"SATISFIED":37},"status":"INCOMPLETE"} result-json-sha256:0ce8283a90cce7648e77d681957bfd759e5be70a9648ccdb9c446761304b8428
+input examples/v02/fixtures/unproven-independent.json sha256:2352daee8cd47547919b2b624915f10b656457b0cffc2bc860e4e5f3d144bb8a
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/unproven-independent.result.json sha256:6b22657a06a2d81dd364100352425dada54c303ed38bda1dff71f0e210c527e3
+lifecycle/unproven-independent agrees summary={"counts":{"FAILURE":0,"INDETERMINATE":1,"MISSING":0,"NOT_EVALUATED":1,"SATISFIED":36},"status":"INCOMPLETE"} result-json-sha256:f9f27838562b709f0ff3cfff4c45e609b22cafeffb40c2440fca5ceaacbbb224
+input examples/v02/fixtures/broken-decision.json sha256:ba0a80af21311e8e7808d04ef4450f6aaab69ee85e7823c7f8d9edef9ea97f90
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/broken-decision.result.json sha256:4e59eb845a03647631970d6e75298d1c958b7f3c886bef29405d82c2780a8c0c
+lifecycle/broken-decision agrees summary={"counts":{"FAILURE":1,"INDETERMINATE":0,"MISSING":6,"NOT_EVALUATED":7,"SATISFIED":17},"status":"FAILURE"} result-json-sha256:4d01e3349d2c45cafba779e682542a89d75bc12157f3af320c9e41e094891818
+input examples/v02/fixtures/broken-control.json sha256:a719698af40c14acd447120a1c71da0c1ca4bc69e69fb88e1e7f36a383ee8f9e
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/broken-control.result.json sha256:6b580a2fd4f5f1516353f8d51192ba2ec14ced8c301da19584e10fa7944bdf9c
+lifecycle/broken-control agrees summary={"counts":{"FAILURE":1,"INDETERMINATE":0,"MISSING":1,"NOT_EVALUATED":1,"SATISFIED":31},"status":"FAILURE"} result-json-sha256:756cc6a46531fea1b93a650181a1e7fdd07eb35f7fb4ac93e1ed8aa20c3496cb
+input examples/v02/fixtures/broken-execution.json sha256:52ebed936d1e5e5b2cf386ae2bcd18ddf946507e47921f586599d31d086bdcd1
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/broken-execution.result.json sha256:503639611dde24a2ffb144ca3804db76c672fdab216bd8a60f62ac3a55edb80c
+lifecycle/broken-execution agrees summary={"counts":{"FAILURE":1,"INDETERMINATE":1,"MISSING":2,"NOT_EVALUATED":4,"SATISFIED":24},"status":"FAILURE"} result-json-sha256:d7a79dd80d7490f6633b352950ebec3ba7936c50a10e7cf28b7841a0b32d66ed
+input examples/v02/fixtures/broken-effect.json sha256:f37307741d6ae90a723e815e5cc19e5d060da1b3bbe016aed72f79e2ab841302
+input reports/beta-2026-09-08/release-validation/lifecycle/variants/broken-effect.result.json sha256:f6dacd690b87d40577c6e0d939e02ba428edc3cd98e959f463b132e1ab681074
+lifecycle/broken-effect agrees summary={"counts":{"FAILURE":1,"INDETERMINATE":0,"MISSING":1,"NOT_EVALUATED":1,"SATISFIED":28},"status":"FAILURE"} result-json-sha256:2396c0602e361bd74b2a08a1701f771b6888e76391b000a01eb308f48ffc6786
+lifecycle-vs-expected {"agrees":11,"cannot-tell":0,"contradicted":0}
+authorized-vs-executed/complete agrees state=SATISFIED detail=Compared authorized_action_digest with executed_action_digest for every applicable pair.
+authorized-vs-executed/toctou-mismatch contradicted state=FAILURE detail=Compared authorized_action_digest with executed_action_digest for every applicable pair.
+authorized-vs-executed/no-execution cannot-tell state=NOT_EVALUATED detail=Both Control and Execution evidence are required.
+authorized-vs-executed {"agrees":1,"cannot-tell":1,"contradicted":1}
+input interop/independent-verifier-corpus/v0.1/manifests/FILES.json sha256:3903f9b235213e3f64c5ddeae74aa4c2a7996c5527f68b380e4b793b74b1802e
+OK: 337 files present, digests match, no unexpected files, no prohibited key material, source basis correct
+NOTE: this checked package integrity only. No AIREP record was canonicalized, hashed, signature-verified or classified.
+input external-evidence/certisyn-2026-09/AIREP-verifier-source.txt sha256:2aef1212adeaab5a1dc7f07c3f240183db97478b247c008c5fcc0e177fbfeca8
+input external-evidence/certisyn-2026-09/AIREP-observed-verdicts.txt sha256:f4a2b23ab1b996ac3daa4b5985fd90f96467bbe84b6ad878832cf09f73d36f92
+input interop/independent-verifier-corpus/v0.1/CASE_INDEX.json sha256:4d84ecd77f93238fa267dba1a4b20a572d2f08405ddb6a062f5fd148cc4c081f
+input interop/independent-verifier-corpus/v0.1/expected/expected_results.jsonl sha256:b942137c3a825906614845176614b92504e514447a490a295f42c737ab9b8211
+external/CLS-P1 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-P2 agrees exit=0 class=AIREP-Witnessed producer-crypto=PASS differences={}
+external/CLS-P3 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-CTL1 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-NG1 agrees exit=0 class=AIREP-Witnessed producer-crypto=PASS differences={}
+external/CLS-FR3 agrees exit=0 class=AIREP-Witnessed producer-crypto=PASS differences={}
+external/CLS-PS1 agrees exit=0 class=AIREP-Core producer-crypto=FAIL differences={}
+external/CLS-PS2 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-XT1 contradicted exit=0 class=AIREP-Core producer-crypto=NOT_EVALUATED differences={"cryptographic_result":{"expected":"PASS","observed":"NOT_EVALUATED"}}
+external/CLS-IND4 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-FR1 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-WM3 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-PB2 agrees exit=0 class=AIREP-Core producer-crypto=NOT_EVALUATED differences={}
+external/CLS-WB2 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-OB4 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/CLS-LEX1 agrees exit=0 class=AIREP-Authenticated producer-crypto=PASS differences={}
+external/PROC-UNP agrees exit=1 class=None producer-crypto=NOT_EVALUATED differences={}
+external/PROC-NGR agrees exit=2 class=None producer-crypto=NOT_EVALUATED differences={}
+external-vs-frozen-expectations {"agrees":17,"cannot-tell":0,"contradicted":1}
+external-raw-reproduction agrees sha256:f4a2b23ab1b996ac3daa4b5985fd90f96467bbe84b6ad878832cf09f73d36f92 cases=18
+Limits: scoped replay, not the shared agent-evidence-verify reader or its corpus.
+Lifecycle fixtures/policies and expected results are first-party test evidence.
+Absent reports do not prove non-events; valid hashes/signatures do not prove truth.
+External: independently implemented consumer/verifier; not expected-blind.
+Frozen report: 17 AGREE / 1 DISAGREE; CLS-XT1 is an expected-projection defect.
+No same-version producer-to-consumer interoperability, deployment-safety,
+IETF/SCITT endorsement or conformance, or full protocol correctness claim.
+No v0.1 producer result is combined with this v0.2 consumer result.
+Six fixed vectors and other external mutation probes are not replayed here.
