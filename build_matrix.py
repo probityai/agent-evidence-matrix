@@ -20,7 +20,10 @@ The schema rules, each a refusal (exit 1 with every problem named):
   prose) and `sha` its 40-hex commit; further inputs go in `also` (each a url with a 40-hex `sha` for a
   repository or a 64-hex `sha256` for a fetched file) and free text in `note`;
 - two projects never share one upstream: compared without case, over every project, frozen ones included;
-- property columns use the listed names and verdict codes.
+- property columns use the listed names and verdict codes;
+- the reader the matrix names (matrix.json "reader") is the reader requirements.in pins, the reader the
+  hash-locked requirements.txt installs, and every reader pin a workflow installs by name, package for package and
+  version for version, so the stated reader and the installed one cannot drift apart.
 """
 from __future__ import annotations
 
@@ -240,6 +243,54 @@ def problems(data: dict, reviews: dict, root: pathlib.Path = ROOT) -> list[str]:
     return out
 
 
+PIN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*)\s*(?:\[[^\]]*\])?\s*==\s*([A-Za-z0-9][A-Za-z0-9.+!_-]*)")
+
+
+def _dist(name: str) -> str:
+    """A distribution name in PEP 503 normal form."""
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def pins_in(text: str, workflow: bool = False) -> dict[str, set[str]]:
+    """{normalised name: versions pinned with ==} in a requirements file, or in a workflow's pip install lines."""
+    out: dict[str, set[str]] = {}
+    for line in text.splitlines():
+        line = line.split("#", 1)[0]
+        if workflow and "pip install" not in line:
+            continue
+        found = PIN.findall(line) if workflow else [m.groups() for m in [PIN.match(line.strip())] if m]
+        for name, version in found:
+            out.setdefault(_dist(name), set()).add(version)
+    return out
+
+
+def reader_problems(reader: dict, sources: dict[str, str]) -> list[str]:
+    """Refusals when the reader matrix.json names differs from a pin of the same package.
+
+    `sources` maps a file name to its text: requirements.in and requirements.txt must each pin every reader
+    package with == at the named version (exactly one version), and a workflow (a name under .github/) that
+    installs a reader package by name must install that version."""
+    out = []
+    if not reader:
+        out.append("matrix.json: no reader named")
+    for src, text in sorted(sources.items()):
+        workflow = src.startswith(".github/")
+        pins = pins_in(text, workflow)
+        for name, version in sorted((reader or {}).items()):
+            got = pins.get(_dist(name))
+            if got is None:
+                if not workflow:
+                    out.append(f"matrix.json: reader {name} {version} is not pinned with == in {src}")
+            elif got != {version}:
+                out.append(f"matrix.json: reader {name} {version} but {src} pins {', '.join(sorted(got))}")
+    return out
+
+
+def reader_sources(root: pathlib.Path = ROOT) -> dict[str, str]:
+    files = [root / "requirements.in", root / "requirements.txt"] + sorted((root / ".github").rglob("*.y*ml"))
+    return {str(f.relative_to(root)): f.read_text(encoding="utf-8") for f in files if f.is_file()}
+
+
 def _frozen(reviews: dict) -> set:
     return {r["project"] for r in reviews.get("reviews") or [] if r.get("state") == "frozen"}
 
@@ -412,7 +463,7 @@ def main(argv=None) -> int:
         for line in freshness(data):
             print(line)
         return 0
-    bad = problems(data, reviews)
+    bad = problems(data, reviews) + reader_problems(data.get("reader"), reader_sources())
     if bad:
         print("\n".join(bad), file=sys.stderr)
         return 1

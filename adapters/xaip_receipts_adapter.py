@@ -8,7 +8,9 @@ theirs:
                     callerSignature and toolMetadata excluded
   receiptVectors    Sections 3.2 and 3.3: Ed25519 over the UTF-8 payload, against the embedded test SPKI keys
                     (DID resolution is out of band, as the vectors file says); also the Section 3.3 fail-closed checks
-                    on formatVersion "1" receipts, reported beside the signature result
+                    on formatVersion "1" receipts, reported beside the signature result. Admission takes each key
+                    by the DID the receipt names (agentDid, and callerDid for a callerSignature): a receipt that
+                    names a DID with no key in the set is refused, never checked under another party's key
   rejectionVectors  Section 3.3 fail-closed checks (64 lowercase hex hashes; failureType "" when success is true and
                     non-empty when it is false), the reason compared with the stated mustReject
 Prints one line per vector and a summary; exit 0 iff every recomputed value equals the stated one.
@@ -77,11 +79,27 @@ def admit(r, keys):
         if bad:
             return False, bad
     msg = payload(r)
-    if not verify(msg, r.get("signature"), keys["agent"]["publicKeySpkiHex"]):
+    agent = key_for(keys, r.get("agentDid"))
+    if agent is None:
+        return False, "agentDid %r names no single key in the key set" % r.get("agentDid")
+    if not verify(msg, r.get("signature"), agent):
         return False, "agent signature does not verify"
-    if "callerSignature" in r and not verify(msg, r["callerSignature"], keys["caller"]["publicKeySpkiHex"]):
-        return False, "callerSignature is present and does not verify"
+    if "callerSignature" in r:
+        caller = key_for(keys, r.get("callerDid"))
+        if caller is None:
+            return False, "callerDid %r names no single key in the key set" % r.get("callerDid")
+        if not verify(msg, r["callerSignature"], caller):
+            return False, "callerSignature is present and does not verify"
     return True, None
+
+
+def key_for(keys, did):
+    """The SPKI of the one key entry bound to ``did`` in the vectors' key set, else None.
+
+    The receipt names its signer by DID; verifying under a fixed role key instead would admit a receipt that
+    claims another agent while carrying this agent's signature."""
+    found = [k["publicKeySpkiHex"] for k in keys.values() if isinstance(k, dict) and k.get("did") == did]
+    return found[0] if isinstance(did, str) and len(found) == 1 else None
 
 
 def verify(msg, sig_hex, spki_hex):

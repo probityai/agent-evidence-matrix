@@ -186,11 +186,19 @@
           "read_their_code": false
         },
         {
-          "cell": "IETF 127 cell 1 and ard: the 12 COSE_Sign1 hash-envelope vectors (JSON side declared through cpb-refs, CBOR side through deterministic-encodings) and the 10 signed ARD manifest vectors",
+          "cell": "IETF 127 cell 1: the 12 COSE_Sign1 hash-envelope vectors (JSON side declared through cpb-refs, CBOR side through deterministic-encodings)",
           "source": "none",
           "verdict": "not run",
-          "detail": "No adapter in this repository reads either emission yet; the answer key for cell 1 is sealed until the pack closes.",
+          "detail": "No adapter in this repository reads this emission yet; the answer key for cell 1 is sealed until the pack closes.",
           "evidence": "no adapter yet"
+        },
+        {
+          "cell": "IETF 127 cell 2 (ard): the 10 signed ARD entry vectors, read with our own verifier of draft-bu-dawn-ard-discovery-00 section 3.5 against the pack's sealed answer key",
+          "source": "our adapter",
+          "verdict": "cannot-tell",
+          "detail": "Our outcomes: 2 verified, 7 failed (expired manifest, embedded payload that is not the manifest, replaced attestation document, transplanted attestation by digest and by identifier, subject version mismatch, key outside the manifest identity), 1 unverified (a digest algorithm the draft does not make mandatory). The three examples, the pack's intended case, verify as controls. Written from the draft text and the pack's README; the pack's verifier was not run. Our return was sealed with two RFC 3161 tokens on 16 November 2026, before the answer key is published; this cell compares the two when it is.",
+          "evidence": "adapters/aep-ard-cell2-run.txt (adapters/aep_ard_cell2.py); seal records/aep-ard-cell2-seal",
+          "read_their_code": false
         }
       ],
       "upstream": {
@@ -204,7 +212,7 @@
         ],
         "note": "eatf-verifier carries the .aep packages (release v0.7.4); aep-sandbox carries the hackathon pack"
       },
-      "replay": "git clone https://github.com/tyche-institute/aep-sandbox X && git -C X checkout c5d4194f4a5fbd0a117d3ed9b4ca0bd164822132 && git clone https://github.com/tyche-institute/eatf-verifier E && git -C E checkout fade5e0ac1223b7ff13339b7c9bcf973b699f9a7 && venv/bin/python -I adapters/aep_sandbox_adapter.py X/hackathon/ietf127/round1/vectors X/hackathon/ietf127/round1/trusted_issuers.json && venv/bin/python -I adapters/aep_sandbox_adapter.py X/interlab/round0/vectors X/interlab/round0/trusted_issuers.json && venv/bin/python -I adapters/aep_eatf_sigs.py E/test-vectors && venv/bin/python -I adapters/aep_seal_timestamps.py X/hackathon/ietf127/timestamps X/hackathon/ietf127/SEAL.sha256 && venv/bin/python -I adapters/aep_tamper_check.py E/test-vectors X/hackathon/ietf127/round1/vectors X/hackathon/ietf127/round1/trusted_issuers.json <scratch dir> && venv/bin/pip install E/lib-python && A2A_JCS_TARGET=rfc8785 EATF_LIB_PYTHON=E/lib-python EATF_CLASS_LOG=classes.log agent-evidence-vectors --corpus vectors-a2a-jcs-v01 --verifier \"venv/bin/python adapters/eatf_jcs_cli.py\"",
+      "replay": "git clone https://github.com/tyche-institute/aep-sandbox X && git -C X checkout c5d4194f4a5fbd0a117d3ed9b4ca0bd164822132 && git clone https://github.com/tyche-institute/eatf-verifier E && git -C E checkout fade5e0ac1223b7ff13339b7c9bcf973b699f9a7 && venv/bin/python -I adapters/aep_sandbox_adapter.py X/hackathon/ietf127/round1/vectors X/hackathon/ietf127/round1/trusted_issuers.json && venv/bin/python -I adapters/aep_sandbox_adapter.py X/interlab/round0/vectors X/interlab/round0/trusted_issuers.json && venv/bin/python -I adapters/aep_eatf_sigs.py E/test-vectors && venv/bin/python -I adapters/aep_seal_timestamps.py X/hackathon/ietf127/timestamps X/hackathon/ietf127/SEAL.sha256 && venv/bin/python -I adapters/aep_ard_cell2.py X/hackathon/ietf127/ard && venv/bin/python -I tools/seal.py verify records/aep-ard-cell2-seal --check-files && venv/bin/python -I adapters/aep_tamper_check.py E/test-vectors X/hackathon/ietf127/round1/vectors X/hackathon/ietf127/round1/trusted_issuers.json <scratch dir> && venv/bin/pip install E/lib-python && A2A_JCS_TARGET=rfc8785 EATF_LIB_PYTHON=E/lib-python EATF_CLASS_LOG=classes.log agent-evidence-vectors --corpus vectors-a2a-jcs-v01 --verifier \"venv/bin/python adapters/eatf_jcs_cli.py\"",
       "independence": "non-author"
     },
     {
@@ -518,8 +526,8 @@
         {
           "cell": "the 376-row expectation table of scripts/prove.sh (294 expected verified, 82 expected falsified: attacks the model is built to find) against the transcript of the pinned commit's CI run",
           "source": "their records",
-          "verdict": "cannot-tell",
-          "detail": "372 of 376 rows match the transcript and the other 4 match only vacuously (next cells); none mismatches and none is missing. The transcript comes from the project's CI, which records no digest of the Tamarin and Maude binaries that produced it, so the matrix cannot say which verifier bytes stand behind the result. The re-proof cell below binds them; this cell moves to agrees only on a full match there.",
+          "verdict": "agrees",
+          "detail": "372 of 376 rows match the transcript and the other 4 match only vacuously (next cells); none mismatches and none is missing. The project's CI records no digest of the Tamarin and Maude binaries that produced the transcript; the re-proof below, with both binaries digested, reads line for line the same, so the result stands behind known verifier bytes.",
           "evidence": "adapters/mcp-auth-tamarin-run.txt (adapters/mcp_auth_tamarin_adapter.py; records/mcp-auth-tamarin/)",
           "read_their_code": true
         },
@@ -540,16 +548,16 @@
         {
           "cell": "re-proven by us: the project's Dockerfile at the pinned commit (Tamarin 1.12.0, Maude 3.5.1), every variant, binary digests recorded",
           "source": "our adapter",
-          "verdict": "not run",
-          "detail": "the reproof-tamarin workflow builds their image, records the sha256 of the two binaries that run, proves every variant and reads the fresh transcripts against the retained table; this cell takes its first recorded run",
-          "evidence": "adapters/mcp_auth_tamarin_adapter.py"
+          "verdict": "agrees",
+          "detail": "the reproof-tamarin workflow built their image, recorded the sha256 of the two binaries that ran (tamarin-prover 9d3fcbaa..., maude 9dd4044e...), proved every variant and read the fresh transcripts against the retained table: 372 of 376 rows match, 4 match only vacuously, 0 mismatch, 0 not reported, line for line the same reading as the CI transcript",
+          "evidence": "adapters/mcp-auth-tamarin-reproof-run.txt (adapters/mcp_auth_tamarin_adapter.py)"
         },
         {
           "cell": "ablation lattice (scripts/ablate.py: subsets of the checks, sufficiency and monotonicity)",
           "source": "none",
           "verdict": "not run",
-          "detail": "needs their ablate.py recomputed inside the same image; reading the published ablation table recomputes nothing",
-          "evidence": "no recomputed run yet"
+          "detail": "the ablation-tamarin workflow runs their ablate.py in their image at the pinned commit (200 runs over 9 models, one job per model) and our reader compares all 564 published cells of docs/ablation.md with the fresh runs and tests monotonicity with its own code; this cell takes its first recorded run",
+          "evidence": "adapters/mcp_auth_tamarin_ablation.py"
         }
       ],
       "upstream": {
@@ -559,8 +567,9 @@
       "replay": "venv/bin/python -I adapters/mcp_auth_tamarin_adapter.py records/mcp-auth-tamarin  # retained artifact 14175059232 and prove.sh at the pin; a full re-proof is the reproof-tamarin workflow",
       "columns": {
         "re-proven by us": {
-          "verdict": "not run",
-          "detail": "reproof-tamarin workflow, first run pending"
+          "verdict": "agrees",
+          "detail": "re-proven in the project's image with both prover binaries digested; 372 of 376 rows match, 4 vacuous, 0 mismatch",
+          "evidence": "adapters/mcp-auth-tamarin-reproof-run.txt (adapters/mcp_auth_tamarin_adapter.py)"
         },
         "declared versus acted": {
           "verdict": "not run",
@@ -750,9 +759,10 @@
         {
           "cell": "examples/results regenerated with the project's own code (python3 -m agentops demo) against the committed run",
           "source": "their records",
-          "verdict": "not run",
-          "detail": "the icon-agentops CI job regenerates the run at the pinned commit and compares it after dropping times, ids and durations; this cell takes that job's recorded result",
-          "evidence": "adapters/icon_agentops.py"
+          "verdict": "agrees",
+          "detail": "9 of 9 sessions equal for events.json, evidence.json and analysis.json after dropping clock readings: times, ids, durations, diagnosis.record.created_at, and call-latency's measured_value, which analysis.py copies from the event's duration_ms. The analyzer's verdicts are compared, including call-latency's result. The icon-agentops CI job regenerates the run at the pinned commit and requires the recorded lines.",
+          "evidence": "adapters/icon-agentops-regen-run.txt (adapters/icon_agentops.py)",
+          "read_their_code": true
         },
         {
           "cell": "ietf-icon-agent-handover demo (trace.json)",

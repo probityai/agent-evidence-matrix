@@ -87,3 +87,61 @@ def test_no_events_is_a_reported_difference_not_a_crash(tmp_path):
     out = subprocess.run([sys.executable, "-I", str(ADAPTER), str(tmp_path / "agentops")], capture_output=True, text=True)
     assert out.returncode == 1 and "Traceback" not in out.stderr
     assert "DIFF  agentops/edit-detection: the clean session has no" in out.stdout
+
+
+def regen_run(tmp_path, change):
+    """A committed session and a regenerated copy of it; `change` edits the regenerated analysis.json."""
+    events, evidence = session()
+    run(tmp_path, events, evidence)
+    analysis = {"assertions": [
+        {"assertion_id": "call-latency", "result": "violation", "measured_value": 86, "boundary_value": 50,
+         "timestamp": "2026-11-06T07:26:44.235Z"},
+        {"assertion_id": "route-intent", "result": "pass", "measured_value": "B", "boundary_value": "B"}],
+        "diagnosis": {"record": {"created_at": "2026-11-06T07:26:44.136Z", "root_cause_event_id": "clean:e004"}}}
+    committed = tmp_path / "agentops" / "examples" / "results" / "clean"
+    (committed / "analysis.json").write_text(json.dumps(analysis))
+    regen = tmp_path / "regen" / "clean"
+    regen.mkdir(parents=True)
+    for name in ("events.json", "evidence.json"):
+        (regen / name).write_text((committed / name).read_text())
+    change(analysis)
+    (regen / "analysis.json").write_text(json.dumps(analysis))
+    out = subprocess.run([sys.executable, "-I", str(ADAPTER), str(tmp_path / "agentops"), "--regenerated",
+                          str(tmp_path / "regen")], capture_output=True, text=True)
+    return out.returncode, out.stdout
+
+
+def test_a_regenerated_analysis_differing_only_in_clock_readings_passes(tmp_path):
+    """The recorded regeneration differed only in diagnosis.record.created_at and call-latency's measured_value,
+    which agentops copies from the event's duration_ms; both are clock readings."""
+    def change(a):
+        a["assertions"][0]["measured_value"] = 81
+        a["diagnosis"]["record"]["created_at"] = "2026-11-16T06:00:00.000Z"
+    rc, out = regen_run(tmp_path, change)
+    assert rc == 0 and "PASS  agentops/analysis.json-normalized: 1 of 1" in out
+
+
+def test_a_regenerated_analysis_with_another_verdict_differs(tmp_path):
+    """Dropping call-latency's measured value must not drop its result, the analyzer's verdict."""
+    def change(a):
+        a["assertions"][0]["result"] = "pass"
+    rc, out = regen_run(tmp_path, change)
+    assert rc == 1 and "DIFF  agentops/analysis.json-normalized: 0 of 1" in out
+
+
+def test_a_measured_value_that_is_not_a_clock_reading_is_compared(tmp_path):
+    """Only an assertion whose measured_value copies a duration is exempt; route-intent's route is compared."""
+    def change(a):
+        a["assertions"][1]["measured_value"] = "C"
+    rc, out = regen_run(tmp_path, change)
+    assert rc == 1 and "$.assertions[*].measured_value" in out
+
+
+def test_a_regenerated_slow_call_that_was_fast_differs(tmp_path):
+    """Second break pass: with the measured value dropped and the verdict copied, a regeneration whose slow call took
+    3 ms still read as equal. The regenerated result must follow from the regenerated reading by the pinned rule."""
+    def change(a):
+        a["assertions"][0]["measured_value"] = 3
+    rc, out = regen_run(tmp_path, change)
+    assert rc == 1 and "DIFF  agentops/analysis.json-normalized: 0 of 1" in out
+    assert "result (does not follow measured_value 3)" in out

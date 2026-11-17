@@ -81,15 +81,14 @@ jobs:
         run: |
           python -I adapters/icon_agentops.py "../icon/Hackathon/IETF 127/running code/agentops" > "$RUNNER_TEMP/body.txt"
           head -1 adapters/icon-agentops-run.txt | cat - "$RUNNER_TEMP/body.txt" | diff adapters/icon-agentops-run.txt -
-      # bash with pipefail, so a regenerated events or evidence file that differs (adapter exit 1) fails the
-      # step; analysis.json carries measured durations and is reported, not compared.
+      # bash with pipefail, so a regenerated events, evidence or analysis file that differs (adapter exit 1)
+      # fails the step; the adapter drops clock readings, including call-latency's copied duration.
       - name: Regenerate with their code and compare
         shell: bash
         run: |
           (cd "../icon/Hackathon/IETF 127/running code/agentops" && python3 -m agentops demo --out "$RUNNER_TEMP/ao-regen" > /dev/null)
           python -I adapters/icon_agentops.py "../icon/Hackathon/IETF 127/running code/agentops" --regenerated "$RUNNER_TEMP/ao-regen" | tee "$RUNNER_TEMP/regen.txt"
-          grep -q "^PASS  agentops/events.json-normalized: 9 of 9" "$RUNNER_TEMP/regen.txt"
-          grep -q "^PASS  agentops/evidence.json-normalized: 9 of 9" "$RUNNER_TEMP/regen.txt"
+          head -1 adapters/icon-agentops-regen-run.txt | cat - "$RUNNER_TEMP/regen.txt" | diff adapters/icon-agentops-regen-run.txt -
   # Runs dns-aid-core's own publisher and signer at the pinned commit (their records), checks the
   # emitted SVCB records against both draft revisions and the signed bindings with our reader, and
   # requires every recorded run to replay line for line. Keys are fresh per run; verdicts are not.
@@ -146,6 +145,29 @@ jobs:
             agent-evidence-vectors --corpus vectors-a2a-jcs-v01 --verifier "python adapters/eatf_jcs_cli.py" > "$RUNNER_TEMP/run.txt" 2>&1
           set -e
           { head -1 adapters/eatf-jcs-run.txt; grep -v "^a2a-agent-card" "$RUNNER_TEMP/run.txt"; grep "^a2a-agent-card" "$RUNNER_TEMP/run.txt" | sed 's/; report .*//'; echo "# refusal path per vector (EATF_CLASS_LOG), sorted"; sort "$RUNNER_TEMP/classes.log"; } | diff adapters/eatf-jcs-run.txt -
+  # Reads the IETF 127 pack's signed ARD entries with our own verifier (draft-bu-dawn-ard-discovery-00 section 3.5)
+  # and requires the recorded outcomes line for line; the three examples are controls that must verify.
+  aep-ard-cell2:
+    runs-on: ubuntu-latest
+    env:
+      SANDBOX_COMMIT: c5d4194f4a5fbd0a117d3ed9b4ca0bd164822132
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install --require-hashes -r requirements.txt
+      - name: Fetch the pinned pack
+        run: |
+          git clone -q https://github.com/tyche-institute/aep-sandbox ../sandbox
+          git -C ../sandbox checkout -q "$SANDBOX_COMMIT"
+      - name: Outcomes equal the recorded run
+        shell: bash
+        run: |
+          python -I adapters/aep_ard_cell2.py ../sandbox/hackathon/ietf127/ard > "$RUNNER_TEMP/run.txt"
+          head -1 adapters/aep-ard-cell2-run.txt | cat - "$RUNNER_TEMP/run.txt" | diff adapters/aep-ard-cell2-run.txt -
+      - name: The recorded run is the one sealed before the answer key
+        run: python -I tools/seal.py verify records/aep-ard-cell2-seal --check-files
   adapter-tests:
     runs-on: ubuntu-latest
     steps:
@@ -153,7 +175,9 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - run: pip install pytest==8.3.5 rfc8785==0.1.4 cryptography==46.0.3
+      # The readers under test run on the hash-locked requirements, the same bytes the reader job installs.
+      - run: pip install --require-hashes -r requirements.txt
+      - run: pip install pytest==8.3.5
       - run: python -m pytest -q tests
   corpus-jcs:
     runs-on: ubuntu-latest

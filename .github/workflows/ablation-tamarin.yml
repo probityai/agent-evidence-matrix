@@ -1,0 +1,81 @@
+name: ablation-tamarin
+# Recomputes the ablation lattice of the formal model of MCP authorization (matrix project 9): the project's own
+# scripts/ablate.py runs every subset of each model's removable checks inside the project's Dockerfile image at the
+# pinned commit, one model per job, and adapters/mcp_auth_tamarin_ablation.py reads the merged runs against the
+# published docs/ablation.md with its own code (cell symbols, monotonicity, coverage). Hours of CPU, so it runs on
+# demand and quarterly, not per push.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 7 5 */3 *"
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+env:
+  MODEL_COMMIT: f2b59e17dc91fe451b225f70aca43a5243a70c9b
+jobs:
+  ablate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix:
+        model: ["01", "02", "03", "04", "05", "06", "07", "08", "09"]
+    steps:
+      - name: Fetch the pinned model
+        run: |
+          git clone -q https://github.com/HarshThumar/mcp-auth-tamarin ../model
+          git -C ../model checkout -q "$MODEL_COMMIT"
+      - run: docker build -t model-ablate ../model
+      - name: Run every subset of the model's checks
+        run: |
+          mkdir -p "$RUNNER_TEMP/results"
+          docker run --rm -e JOBS=4 -e TIMEOUT=1800 -v "$RUNNER_TEMP/results:/work/results" model-ablate \
+            python3 scripts/ablate.py "${{ matrix.model }}" | tee "$RUNNER_TEMP/ablate-${{ matrix.model }}.log"
+          mv "$RUNNER_TEMP/results/ablation.json" "$RUNNER_TEMP/results/ablation-${{ matrix.model }}.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ablation-${{ matrix.model }}
+          path: |
+            ${{ runner.temp }}/results
+            ${{ runner.temp }}/ablate-${{ matrix.model }}.log
+  read:
+    needs: ablate
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: ablation-*
+          path: ${{ runner.temp }}/runs
+      - name: Fetch the published table at the pinned commit
+        run: |
+          git clone -q https://github.com/HarshThumar/mcp-auth-tamarin ../model
+          git -C ../model checkout -q "$MODEL_COMMIT"
+      - name: Merge the per-model runs
+        run: |
+          python3 -I - "$RUNNER_TEMP/runs" "$RUNNER_TEMP/ablation.json" <<'EOF'
+          import json, pathlib, sys
+          files = sorted(pathlib.Path(sys.argv[1]).glob("*/results/ablation-*.json"))
+          runs = [r for f in files for r in json.loads(f.read_text(encoding="utf-8"))]
+          pathlib.Path(sys.argv[2]).write_text(json.dumps(runs, indent=1), encoding="utf-8")
+          print(f"{len(files)} model files, {len(runs)} runs")
+          EOF
+      - name: Read the fresh runs against the published table
+        run: |
+          python3 -I adapters/mcp_auth_tamarin_ablation.py ../model/docs/ablation.md "$RUNNER_TEMP/ablation.json" \
+            | tee "$RUNNER_TEMP/ablation-run.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ablation-read
+          path: |
+            ${{ runner.temp }}/ablation.json
+            ${{ runner.temp }}/ablation-run.txt

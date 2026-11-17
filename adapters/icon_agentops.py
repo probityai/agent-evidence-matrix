@@ -16,11 +16,12 @@ NaN or Infinity refuses the file) and prints one line per check ("PASS|DIFF|INFO
                               a parent link, edit an evidence body, edit the inline attributes the analyzer
                               reads), judged by the project's own hash rule and by the bound rule above
   agentops/<file>-normalized  with --regenerated: the regenerated session files against the committed ones,
-                              after dropping the fields that differ by design (times, ids, durations)
+                              after dropping the fields that differ by design (times, ids, durations, and a
+                              measured_value that copies a duration)
 
 A session file the strict parser refuses is reported by agentops/evidence-hash and left out of the other
 readings, which say how many sessions they read. Exit 1 when the evidence-hash check or a regenerated
-events or evidence file differs; 2 on a crash (never 1); 0 otherwise.
+events, evidence or analysis file differs; 2 on a crash (never 1); 0 otherwise.
 """
 from __future__ import annotations
 
@@ -181,12 +182,43 @@ def edit_detection(results_dir):
 
 
 VOLATILE = {"timestamp", "trace_id", "span_id", "detected_at", "duration_ms", "latency_ms", "elapsed_ms", "duration",
-            "started_at", "ended_at", "analysis_duration_ms"}
+            "started_at", "ended_at", "analysis_duration_ms", "created_at"}
+
+# Assertions whose measured_value is a copy of a volatile field. agentops/analysis.py at the pinned commit sets
+# call-latency's measured_value to the event's action.duration_ms, a wall-clock reading that differs on every run.
+# Its result (pass, approaching, violation) is still compared: that is the analyzer's verdict. Because the reading
+# itself is dropped, the regenerated result must also follow from the regenerated reading by the pinned rule, or a
+# regeneration whose slow call was fast (the slow_call scenario's latency gone) would read as equal.
+VOLATILE_MEASUREMENT = {"call-latency"}
+
+
+def latency_rule(measured, boundary):
+    """agentops/analysis.py at the pin: violation above the limit, approaching from 80 percent of it, else pass."""
+    if isinstance(measured, bool) or not isinstance(measured, (int, float)) or \
+            isinstance(boundary, bool) or not isinstance(boundary, (int, float)):
+        return None
+    return "violation" if measured > boundary else "approaching" if measured >= .8 * boundary else "pass"
+
+
+def rule_breaks(v, path="$"):
+    """Paths of call-latency assertions whose result does not follow from their own measured and boundary values."""
+    out = []
+    if isinstance(v, dict):
+        if v.get("assertion_id") in VOLATILE_MEASUREMENT and \
+                latency_rule(v.get("measured_value"), v.get("boundary_value")) != v.get("result"):
+            out.append(f"{path}.result (does not follow measured_value {v.get('measured_value')!r})")
+        for k, x in v.items():
+            out += rule_breaks(x, f"{path}.{k}")
+    elif isinstance(v, list):
+        for x in v:
+            out += rule_breaks(x, f"{path}[*]")
+    return out
 
 
 def norm(v):
     if isinstance(v, dict):
-        return {k: norm(x) for k, x in v.items() if k not in VOLATILE}
+        drop = VOLATILE | ({"measured_value"} if v.get("assertion_id") in VOLATILE_MEASUREMENT else set())
+        return {k: norm(x) for k, x in v.items() if k not in drop}
     if isinstance(v, list):
         return [norm(x) for x in v]
     return v
@@ -223,13 +255,17 @@ def regenerated(results_dir, regen):
                 differing.append(sess.name)
                 where[sess.name] = "missing"
                 continue
-            d = first_diff(norm(load(a)), norm(load(b)))
+            got = load(b)
+            d = first_diff(norm(load(a)), norm(got))
+            broken = rule_breaks(got) if fname == "analysis.json" else []
+            if broken:
+                d = ", ".join(([d] if d else []) + sorted(set(broken)))
             if d is None:
                 same += 1
             else:
                 differing.append(sess.name)
                 where[sess.name] = d
-        status = "PASS" if not differing else ("INFO" if fname == "analysis.json" else "DIFF")
+        status = "PASS" if not differing else "DIFF"
         paths = sorted({p for w in where.values() for p in w.split(", ")})
         emit(status, f"agentops/{fname}-normalized",
              f"{same} of {same + len(differing)} sessions equal after dropping volatile fields; differing: {differing}"

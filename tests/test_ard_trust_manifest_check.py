@@ -193,3 +193,23 @@ def test_an_attestation_digest_is_read_as_hex_without_case(tmp_path, stated, ver
     out = subprocess.run([sys.executable, "-I", str(ADAPTERS / "ard_examples_adapter.py"), str(tmp_path)],
                          capture_output=True, text=True).stdout
     assert f"attestation-digest\t{verdict}" in out
+
+
+def test_a_header_that_is_not_json_or_not_utf8_or_a_non_string_identifier_is_one_line(tmp_path):
+    """Second break pass: each of these crashed the run with a traceback (exit 1) before strict_loads refused
+    non-JSON and too-deep text, the header decode refused non-UTF-8 bytes, and publisher_of_urn read only strings."""
+    e, did = _signed()
+    s = e["trustManifest"]["signature"].split(".")[2]
+    entries = []
+    for header in (b"not json", b"[" * 100000 + b"]" * 100000, b"\xff\xfe"):
+        bad = copy.deepcopy(e)
+        bad["trustManifest"]["signature"] = b64u(header) + ".." + s
+        entries.append(bad)
+    sk, pk = key("break-11-victim")
+    entries.append(sign(sk, entry(identifier=5), {"alg": "EdDSA", "kid": KID}))
+    lines = run(tmp_path, "crash", {"entries": entries}, did).splitlines()
+    assert len(lines) == 4, lines
+    assert "REFUSED not_json:" in lines[0]
+    assert lines[1].endswith("REFUSED nested_too_deep")
+    assert lines[2].endswith("REFUSED header_not_utf8")
+    assert "L=True" in lines[3] and "publisher=None" in lines[3]
