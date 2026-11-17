@@ -1,0 +1,26 @@
+project commit 615c0e07039fab5503feed330bf3ff4f1f5ef68e | standard commit 007f8c99ec910564bac1c508b76c8ce8391fa11e
+== E. one-chain: the project's build.py and negatives.py, run here
+build exit 0
+agrees      E build: all_verified true
+agrees      E joins true fresh=12 claimed=12
+agrees      E stated negative chain as expected
+negatives exit 0 | stdout-last-line: 22/22 failing cases caught where expected
+agrees      E failing cases caught fresh=22 claimed=22
+== F. one-chain-real: the project's build.py and negatives.py, run here
+build exit 0
+agrees      F build: all_verified true
+agrees      F joins true fresh=12 claimed=12
+agrees      F stated negative chain as expected
+negatives exit 0 | stdout-last-line: 8/8 failing cases caught where expected
+agrees      F failing cases caught fresh=8 claimed=8
+agrees      F real approval (WebAuthn-ES256): status, signature, subject, key_state, identity = ['verified', 'verified', 'verified', 'verified', 'verified']
+== G. second log: the project's verify_witness.py on the four receipts of witness.agentactioncapsule.org
+exit 0 | stdout-last-line: ALL FOUR VERIFIED
+agrees      G receipts verified fresh=4 claimed=4
+== H. receipt-size: the project's check.py on a plain and a signed-size receipt of ts.isoluce.net
+exit 0 | stdout-last-line: PASS
+agrees      H results of this run equal the committed results.json
+agrees      H plain receipt read alone: other pairs accepted fresh=31 claimed=31 of 8255
+agrees      H plain receipt with the signed tree head: issued pair only
+agrees      H signed-size receipt read alone: issued pair only
+SUMMARY: 0 comparisons differ

@@ -1,0 +1,41 @@
+ok    sums    README.md
+ok    sums    manifest.json
+ok    sums    authority-effect-results.md
+ok    sums    authority-effect-results.json
+ok    sums    trace.jsonl
+ok    sums    portable-proofs.json
+ok    sums    verify-portable-proofs.mjs
+ok    verify  0x03ce9321248769b72e4c7d630d34bafbb00c60eb1c6799c6089bdb6791fa7813  agent-job
+ok    verify  0xa03744a0d12c41b3d491403cd1e197c45855b8be24dec4ffb966963e71490bff  agent-job-authority-decision
+ok    verify  0xab4a4049a2902398a71e7a5e87993a8dd341da85134beb63d73fc607ff489954  agent-job
+ok    verify  0x3b80f87c6b610fcf29dc63342882780d29b1a6bf30cee2632bcb543f1c846844  agent-job-authority-decision
+ok    verify  0x5d476c527c886fda358d542fdc322525ce7c3fef5933a911c4903166ee60ae7e  agent-job
+ok    verify  0xaacbfee73fd4db710a3b55f97b242553f19ee8abacda4aada9e132bc87fa5d4a  agent-job-authority-decision
+ok    verify  0x1a66066e51ade3bdbb110ab6f9e88abd2967f6b52967f8345edc3d6ab7e48d8d  agent-job
+ok    verify  0x59ae734cdd784df5e18ca18a58efecb553326fc742356840d4099801dce58bcd  agent-job-authority-decision
+ok    verify  0xb84a54c04bb32a65c327f2045c6c53d262775050e1b52672b14f2b9eecdfee01  agent-job-authority-decision
+ok    verify  0xb0dc6b40444f41635e4c0d06ad71ced9ce6ce00cbce79490ff77d7eddc6519d9  agent-job-authority-decision
+ok    verify  0x308df7fa625b481429069cc72a3288b1661d10146fc19b9d0533ea54243a1fdd  agent-job-authority-decision
+ok    verify  0x3d7b233cbfb24d4999e5e61bd235724d4d4009b40fe9468bca51da62346e46e2  agent-job-authority-decision
+ok    verify  0x45606ad5d655a20abb838440cae024353b31a4a9a611680c152e2ff6e325b793  agent-job
+ok    verify  0x9281d10d2c7c11d4c35f1af0370453b46477ed329e247ee0b748773dc42f7a31  agent-job-authority-decision
+ok    verify  0xe08509853fc3bda2ca180d3d6f0d6e1f4480d03f792504e0bda31e17f2d1bdd4  agent-job-authority-decision
+ok    tamper  0x03ce9321248769b72e4c7d630d34bafbb00c60eb1c6799c6089bdb6791fa7813  refused=FAIL
+ok    tamper  0xa03744a0d12c41b3d491403cd1e197c45855b8be24dec4ffb966963e71490bff  refused=FAIL
+ok    tamper  0xab4a4049a2902398a71e7a5e87993a8dd341da85134beb63d73fc607ff489954  refused=FAIL
+ok    tamper  0x3b80f87c6b610fcf29dc63342882780d29b1a6bf30cee2632bcb543f1c846844  refused=FAIL
+ok    tamper  0x5d476c527c886fda358d542fdc322525ce7c3fef5933a911c4903166ee60ae7e  refused=FAIL
+ok    tamper  0xaacbfee73fd4db710a3b55f97b242553f19ee8abacda4aada9e132bc87fa5d4a  refused=FAIL
+ok    tamper  0x1a66066e51ade3bdbb110ab6f9e88abd2967f6b52967f8345edc3d6ab7e48d8d  refused=FAIL
+ok    tamper  0x59ae734cdd784df5e18ca18a58efecb553326fc742356840d4099801dce58bcd  refused=FAIL
+ok    tamper  0xb84a54c04bb32a65c327f2045c6c53d262775050e1b52672b14f2b9eecdfee01  refused=FAIL
+ok    tamper  0xb0dc6b40444f41635e4c0d06ad71ced9ce6ce00cbce79490ff77d7eddc6519d9  refused=FAIL
+ok    tamper  0x308df7fa625b481429069cc72a3288b1661d10146fc19b9d0533ea54243a1fdd  refused=FAIL
+ok    tamper  0x3d7b233cbfb24d4999e5e61bd235724d4d4009b40fe9468bca51da62346e46e2  refused=FAIL
+ok    tamper  0x45606ad5d655a20abb838440cae024353b31a4a9a611680c152e2ff6e325b793  refused=FAIL
+ok    tamper  0x9281d10d2c7c11d4c35f1af0370453b46477ed329e247ee0b748773dc42f7a31  refused=FAIL
+ok    tamper  0xe08509853fc3bda2ca180d3d6f0d6e1f4480d03f792504e0bda31e17f2d1bdd4  refused=FAIL
+info  coverage  manifest case_coverage={"note": "A missing case is not a passing case. The expected set is fixed by the suite, and this run reports what it produced.", "expected": 8, "covered": 8, "passed": 8, "missing": [], "statement": "8 of 8 expected cases produced a record in this run"}; trace.jsonl records=8
+
+sums 7 of 7; verify 15 of 15; tamper refused 15 of 15
+EXIT=0

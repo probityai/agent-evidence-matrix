@@ -22,8 +22,8 @@
     },
     {
       "project": 4,
-      "review": "R-2026-11-15-04",
-      "date": "2026-11-15",
+      "review": "R-2026-11-17-04",
+      "date": "2026-11-17",
       "state": "published"
     },
     {
@@ -148,6 +148,12 @@
       "project": 24,
       "review": "R-2026-11-15-24",
       "date": "2026-11-15",
+      "state": "published"
+    },
+    {
+      "project": 25,
+      "review": "R-2026-11-17-25",
+      "date": "2026-11-17",
       "state": "published"
     }
   ]

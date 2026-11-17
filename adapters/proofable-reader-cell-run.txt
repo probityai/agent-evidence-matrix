@@ -1,0 +1,13 @@
+reader agent_evidence_vectors authoritydispatch, contract https://probityai.github.io/agent-evidence-observer/contract/authority-at-dispatch/v1
+hosted_allow                 members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+binding_veto                 members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+approval_reachable           members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+approval_unavailable         members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+revoke_before_dispatch       members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+expiry_before_dispatch       members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+stale_authority              members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+post_dispatch_revoke         members missing: decisionTime,approvedAction,dispatch,delegation,authorityEvidence | reader: no decision (KeyError: 'dispatch')
+
+records 8; contractId present 8 and equal to the reader's 8; reader decisions 0 of 8
+envelopes cited by the records: 15 of 15
+EXIT=0

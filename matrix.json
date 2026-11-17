@@ -10,7 +10,7 @@
     "unsupported",
     "not run"
   ],
-  "total_projects": 24,
+  "total_projects": 25,
   "projects": [
     {
       "id": 1,
@@ -320,6 +320,34 @@
           "evidence": "adapters/lemonnier-run.txt (adapters/lemonnier_adapter.py)"
         },
         {
+          "cell": "the refund chain across four drafts (interop/one-chain): their verifiers on their committed records, against their README figures",
+          "source": "their records",
+          "verdict": "agrees",
+          "detail": "Their build.py and negatives.py, run from a copy with python -I and the Decision Provenance Standard at 007f8c99: all_verified true, 12 of 12 joins true, the stated negative chain (150 executed for 120 approved) as expected, 22 of 22 failing cases caught where expected. Matches the figures of interop/README.md. No reader of ours is involved: agent-evidence-vectors has none for these formats. Project commit 615c0e07.",
+          "evidence": "adapters/lemonnier-own-records-run.txt (adapters/lemonnier_own_records_adapter.py), section E"
+        },
+        {
+          "cell": "the same chain with a real passkey approval (interop/one-chain-real): the WebAuthn-ES256 assertion checked by the Decision Provenance Standard's reference check",
+          "source": "their records",
+          "verdict": "agrees",
+          "detail": "Their build.py and negatives.py, run from a copy with python -I: all_verified true, 12 of 12 joins true, the person approval verified on status, signature, subject, key_state and identity, 8 of 8 failing cases caught where expected. The signed inputs are the ones pinned in interop/one-chain-real/signed. Project commit 615c0e07.",
+          "evidence": "adapters/lemonnier-own-records-run.txt (adapters/lemonnier_own_records_adapter.py), section F"
+        },
+        {
+          "cell": "four receipts of a second Transparency Service (witness.agentactioncapsule.org) for the same four Signed Statements",
+          "source": "their records",
+          "verdict": "agrees",
+          "detail": "Their verify_witness.py, run from a copy with python -I on the receipts committed in interop/one-chain/registration/second-log: entry, leaf, RFC 9162 inclusion proof and Ed25519 signature under the published key, two negative controls each; ALL FOUR VERIFIED. The receipts are RFC 9942 receipts of another operator; the tree size and leaf index they state are compared, not bound. Project commit 615c0e07.",
+          "evidence": "adapters/lemonnier-own-records-run.txt (adapters/lemonnier_own_records_adapter.py), section G"
+        },
+        {
+          "cell": "a ts.isoluce.net receipt that signs its tree size and leaf index (interop/receipt-size), against a plain RFC 9942 receipt of the same statement",
+          "source": "their records",
+          "verdict": "agrees",
+          "detail": "Their check.py, run from a copy with python -I, offline: of 8,255 edited (tree size, leaf index) pairs, the plain receipt read alone is accepted for the issued pair and 31 others (leaf 0 at every size from 33 to 64); read with the service's signed tree head, or carrying the protected labels -65537 and -65538, it is accepted for the issued pair only. The results of this run equal the committed results.json. Project commit 615c0e07.",
+          "evidence": "adapters/lemonnier-own-records-run.txt (adapters/lemonnier_own_records_adapter.py), section H"
+        },
+        {
           "cell": "Agent Action Capsule, DPS action-binding and passkey-signed approval records, and the refund chain across four drafts: our reader",
           "source": "none",
           "verdict": "unsupported",
@@ -329,10 +357,20 @@
       ],
       "upstream": {
         "url": "https://github.com/Laurent-Lemonnier/dps-scitt-decision-layer",
-        "sha": "00d748a63d96b13905dafb4100fb694c0715469f"
+        "sha": "00d748a63d96b13905dafb4100fb694c0715469f",
+        "also": [
+          {
+            "url": "https://github.com/Laurent-Lemonnier/dps-scitt-decision-layer",
+            "sha": "615c0e07039fab5503feed330bf3ff4f1f5ef68e"
+          },
+          {
+            "url": "https://github.com/decision-provenance-standard/standard",
+            "sha": "007f8c99ec910564bac1c508b76c8ce8391fa11e"
+          }
+        ]
       },
-      "replay": "git clone https://github.com/Laurent-Lemonnier/dps-scitt-decision-layer ../dps-scitt-decision-layer && git -C ../dps-scitt-decision-layer checkout 00d748a63d96b13905dafb4100fb694c0715469f && venv/bin/python -I adapters/lemonnier_adapter.py ../dps-scitt-decision-layer",
-      "independence": "non-author"
+      "replay": "git clone https://github.com/Laurent-Lemonnier/dps-scitt-decision-layer ../dps-scitt-decision-layer && git -C ../dps-scitt-decision-layer checkout 00d748a63d96b13905dafb4100fb694c0715469f && venv/bin/python -I adapters/lemonnier_adapter.py ../dps-scitt-decision-layer\n# cells on the project's own records (refund chain, passkey approval, second log, signed-size receipt), at project commit 615c0e07039fab5503feed330bf3ff4f1f5ef68e:\ngit -C ../dps-scitt-decision-layer checkout 615c0e07039fab5503feed330bf3ff4f1f5ef68e && git clone https://github.com/decision-provenance-standard/standard ../dps-standard && git -C ../dps-standard checkout 007f8c99ec910564bac1c508b76c8ce8391fa11e && venv/bin/python -m pip install cbor2 cryptography jsonschema asn1crypto==1.5.1 && venv/bin/python -I adapters/lemonnier_own_records_adapter.py ../dps-scitt-decision-layer ../dps-standard",
+      "independence": "co-author"
     },
     {
       "id": 5,
@@ -1222,6 +1260,41 @@
           "detail": "needs a signed catalog entry and a recorded run"
         }
       }
+    },
+    {
+      "id": 25,
+      "name": "Proofable authority-at-dispatch evidence (proofable/docs; CAIP-380 portable proofs)",
+      "cells": [
+        {
+          "cell": "SHA256SUMS of the 2026-11-02 packet (public/evidence/aaif/authority-at-dispatch/2026-11-02-suite), recomputed with hashlib",
+          "source": "their records",
+          "verdict": "agrees",
+          "detail": "7 of 7 listed files match. Second run byte-identical.",
+          "evidence": "adapters/proofable-aad-run.txt (adapters/proofable_aad_adapter.py)"
+        },
+        {
+          "cell": "Their offline verifier verify-portable-proofs.mjs (@proofable/sdk 0.1.11) on their 15 CAIP-380 envelopes: 10 authority decisions and 5 job receipts",
+          "source": "their records",
+          "verdict": "agrees",
+          "detail": "15 of 15 verify (signature and qHash), each signed by 0xa41494e1e5f9e5eaf786961e6ef84cd1a3071eec as the packet README states. Changing one digit of one envelope's signed content makes the verifier refuse that envelope, and only that one, with exit 1: 15 of 15. Second run byte-identical. The signer is the Proofable service key, so each envelope is a service-attested statement, not one signed by the controller.",
+          "evidence": "adapters/proofable-aad-run.txt (adapters/proofable_aad_adapter.py)"
+        },
+        {
+          "cell": "the authority-at-dispatch/v1 reader of agent-evidence-vectors 0.36.3 (the reader of the corpus vectors-authority-at-dispatch) on the 8 case records of trace.jsonl, which name that contract",
+          "source": "our adapter",
+          "verdict": "unsupported",
+          "profile": "authority-at-dispatch/v1 record shape: decisionTime, approvedAction, dispatch (with the dispatched bytes), delegation grants with notBefore and expiresAt, authorityEvidence with observedAt",
+          "detail": "contractId is present and equal to the reader's on 8 of 8 records, and the 8 records cite all 15 envelopes. The reader returns no decision on any of the 8 (0 of 8): the records carry none of decisionTime, approvedAction, dispatch, delegation or authorityEvidence, which the reader's checks 3 to 8 read, and trace.jsonl states evidenceAgeSeconds as not_emitted. A refusal on shape, so no verdict on the packet's expected outcomes: they are the project's statements, read by the cells above through the project's own verifier only.",
+          "evidence": "adapters/proofable-reader-cell-run.txt (adapters/proofable_reader_cell.py)"
+        }
+      ],
+      "upstream": {
+        "url": "https://github.com/proofable/docs",
+        "sha": "513cd308c9f943e5cb4b096912806ad6fa3146e8",
+        "note": "verifier dependency @proofable/sdk@0.1.11 from npm, as the packet README pins it"
+      },
+      "replay": "git clone https://github.com/proofable/docs ../proofable-docs && git -C ../proofable-docs checkout 513cd308c9f943e5cb4b096912806ad6fa3146e8 && (cd ../proofable-docs/public/evidence/aaif/authority-at-dispatch/2026-11-02-suite && npm install --no-save @proofable/sdk@0.1.11) && python -I adapters/proofable_aad_adapter.py ../proofable-docs && python -I adapters/proofable_reader_cell.py ../proofable-docs",
+      "independence": "co-author"
     }
   ]
 }

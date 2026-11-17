@@ -293,3 +293,46 @@ jobs:
           if [ "$rc" != 1 ]; then echo "expected exit 1, got $rc"; cat "$RUNNER_TEMP/airep-mut4.txt"; exit 1; fi
           grep -q '^lifecycle/complete contradicted' "$RUNNER_TEMP/airep-mut4.txt"
           grep -q '^authorized-vs-executed/complete cannot-tell' "$RUNNER_TEMP/airep-mut4.txt"
+  # Replays the cells on the Decision Provenance project's own records (row 4, cells E to H): the project's
+  # verifiers at the pinned commits, run from copies with python -I, must print the committed run.
+  lemonnier-own-records:
+    runs-on: ubuntu-latest
+    env:
+      LEMONNIER_COMMIT: 615c0e07039fab5503feed330bf3ff4f1f5ef68e
+      DPS_STANDARD_COMMIT: 007f8c99ec910564bac1c508b76c8ce8391fa11e
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install cbor2==6.3.0 cryptography==50.0.2 jsonschema==4.26.0 asn1crypto==1.5.1
+      - name: Fetch the pinned upstreams
+        run: |
+          git clone -q https://github.com/Laurent-Lemonnier/dps-scitt-decision-layer ../dps-scitt-decision-layer
+          git -C ../dps-scitt-decision-layer checkout -q "$LEMONNIER_COMMIT"
+          git clone -q https://github.com/decision-provenance-standard/standard ../dps-standard
+          git -C ../dps-standard checkout -q "$DPS_STANDARD_COMMIT"
+          test "$(cat ../dps-scitt-decision-layer/interop/aqta/approval-record/DPS_STANDARD_COMMIT)" = "$DPS_STANDARD_COMMIT"
+      - name: Replay and compare with the recorded run
+        run: python -I adapters/lemonnier_own_records_adapter.py ../dps-scitt-decision-layer ../dps-standard | diff adapters/lemonnier-own-records-run.txt -
+  # Replays the Proofable authority-at-dispatch packet (row 25): the packet's own offline verifier on its 15
+  # envelopes and one tampered copy per envelope, then the pinned reader of the contract on its 8 case records.
+  proofable:
+    runs-on: ubuntu-latest
+    env:
+      PROOFABLE_COMMIT: 513cd308c9f943e5cb4b096912806ad6fa3146e8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install --require-hashes -r requirements.txt
+      - name: Fetch the pinned packet and its verifier's dependency
+        run: |
+          git clone -q https://github.com/proofable/docs ../proofable-docs
+          git -C ../proofable-docs checkout -q "$PROOFABLE_COMMIT"
+          (cd ../proofable-docs/public/evidence/aaif/authority-at-dispatch/2026-11-02-suite && npm install --no-save @proofable/sdk@0.1.11)
+      - name: The packet's verifier run equals the recorded run
+        run: python -I adapters/proofable_aad_adapter.py ../proofable-docs | diff adapters/proofable-aad-run.txt -
+      - name: The pinned reader's answer on the packet's records equals the recorded run
+        run: python -I adapters/proofable_reader_cell.py ../proofable-docs | diff adapters/proofable-reader-cell-run.txt -
