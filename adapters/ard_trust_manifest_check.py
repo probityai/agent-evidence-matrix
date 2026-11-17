@@ -64,7 +64,14 @@ def strict_loads(text):
     def const(name):
         raise Refusal("non_json_constant:%s" % name)
 
-    return json.loads(text, object_pairs_hook=pairs, parse_constant=const)
+    try:
+        return json.loads(text, object_pairs_hook=pairs, parse_constant=const)
+    except Refusal:
+        raise
+    except RecursionError as exc:
+        raise Refusal("nested_too_deep") from exc
+    except ValueError as exc:  # json.JSONDecodeError: the text is not JSON
+        raise Refusal("not_json:%s" % getattr(exc, "msg", type(exc).__name__)) from exc
 
 
 def canon(obj):
@@ -163,7 +170,9 @@ def signing_input(h, hdr, obj):
 
 
 def publisher_of_urn(urn):
-    parts = (urn or "").split(":")
+    if not isinstance(urn, str):
+        return None
+    parts = urn.split(":")
     return parts[2] if len(parts) > 2 and parts[0] == "urn" and parts[1] == "air" else None
 
 
@@ -193,6 +202,8 @@ def check_object(name, obj, did, methods, assertion):
         ok_d = verify_raw(alg, key, b64u(s), signing_input(h, hdr, tm_only))
     except Refusal as exc:
         return "%s REFUSED %s" % (name, exc)
+    except UnicodeDecodeError:
+        return "%s REFUSED header_not_utf8" % name
     signer_host = did_of(kid).split(":", 2)[2] if did_of(kid).startswith("did:web:") else None
     pub = publisher_of_urn(obj.get("identifier"))
     exact = None if pub is None else signer_host == pub

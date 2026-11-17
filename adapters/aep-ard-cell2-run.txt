@@ -1,0 +1,15 @@
+# tyche-institute/aep-sandbox at c5d4194f4a5fbd0a117d3ed9b4ca0bd164822132, hackathon/ietf127/ard, read by adapters/aep_ard_cell2.py (written from draft-bu-dawn-ard-discovery-00 section 3.5; the pack's verifier was not run)
+control entry-single-detached        verified    all-checks-pass
+control entry-single-embedded        verified    all-checks-pass
+control entry-two-manifests          verified    all-checks-pass
+vector  a2-01                        failed      expired
+vector  a2-02                        failed      jws-embedded-payload-not-the-manifest
+vector  a2-03                        verified    all-checks-pass
+vector  a2-04                        failed      attestation-digest-mismatch
+vector  a2-05                        failed      attestation-subject-digest-mismatch
+vector  a2-06                        unverified  attestation-digest-alg-not-implemented:x-test256
+vector  a2-07                        verified    all-checks-pass
+vector  a2-08                        failed      attestation-subject-identifier-mismatch
+vector  a2-09                        failed      subject-version-mismatch
+vector  a2-10                        failed      jws-refused:kid_not_under_identity:did:web:third-party.example.net!=did:web:example.org
+SUMMARY controls all verified; vectors failed 7, unverified 1, verified 2

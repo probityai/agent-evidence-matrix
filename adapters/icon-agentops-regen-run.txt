@@ -1,0 +1,8 @@
+# billwuqin/Agent-Observability-Intervention-Control at 8d370de7e09d2fe5d9efa93120e564cd825331fc, Hackathon/IETF 127/running code/agentops, regenerated with python3 -m agentops demo and compared by adapters/icon_agentops.py --regenerated
+PASS  agentops/evidence-hash: 99 of 99 events: one ref, hash = sha256 of json.dumps(attributes, sort_keys=True, ensure_ascii=False), evidence.json body equal to those attributes; 0 files refused; first problems: []
+INFO  agentops/rfc8785: 27 of 99 hashes equal SHA-256 of the RFC 8785 bytes of the body (27 bodies are empty objects); 0 bodies have no RFC 8785 form; 0 sessions refused, 0 refs with no body (not read)
+INFO  agentops/edit-detection: the project's hash rule detects 1 of 5 edits (['edit evidence.json body of e004']); 0 of 4 edits to the bytes the analyzer reads; the bound rule detects 2 of 5 (['edit evidence.json body of e004', 'edit inline attributes of e004 (the copy analysis.py reads)'])
+PASS  agentops/events.json-normalized: 9 of 9 sessions equal after dropping volatile fields; differing: []
+PASS  agentops/evidence.json-normalized: 9 of 9 sessions equal after dropping volatile fields; differing: []
+PASS  agentops/analysis.json-normalized: 9 of 9 sessions equal after dropping volatile fields; differing: []
+SUMMARY pass=4 diff=0 info=2

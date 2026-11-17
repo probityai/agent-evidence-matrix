@@ -1,0 +1,18 @@
+# HarshThumar/mcp-auth-tamarin at f2b59e17dc91fe451b225f70aca43a5243a70c9b re-proven by the reproof-tamarin workflow (run 43817451271, 16 Nov 2026) in the project's own Dockerfile image; binaries that ran: tamarin-prover sha256 9d3fcbaa65aeea244cff5b8074338d129427161cc8b02e5aee72d30ee072acc9, maude sha256 9dd4044e693944aae97ad72086bc70275fa34bf635f9b377a5b2100bf3ed8655; fresh transcripts read by adapters/mcp_auth_tamarin_adapter.py
+PASS  retention/tamarin-results.zip: sha256 91b3ec8c0939f755... as recorded
+PASS  retention/prove.sh: sha256 bd0ecd11d967430e... as recorded
+INFO  table/expectations: 376 rows: 294 expected verified, 82 expected falsified (attacks the model is built to find)
+PASS  table/match: 372 of 376 rows match the transcript, 4 more match only vacuously, 0 mismatch, 0 not reported
+INFO  coverage/unpinned: 2 of 378 reported lemmas have no table row: 06_audience_injection/aud_token_endpoint/client_key_secret, 06_audience_injection/aud_token_endpoint/injection_via_revocation
+INFO  vacuity/06_audience_injection/aud_token_endpoint: executable is falsified, so the honest run cannot complete and 3 verified lemmas hold vacuously: ['client_authentication', 'client_key_secret', 'token_secrecy']
+INFO  vacuity/08_token_passthrough/passthrough: executable is falsified, so the honest run cannot complete and 2 verified lemmas hold vacuously: ['downstream_only_via_server', 'server_accepts_only_own_tokens']
+INFO  model/01_as_selection: 8 match, 0 vacuous, 0 mismatch, 0 not reported
+INFO  model/02_code_and_audience: 63 match, 0 vacuous, 0 mismatch, 0 not reported
+INFO  model/03_cimd_client_binding: 106 match, 0 vacuous, 0 mismatch, 0 not reported
+INFO  model/04_id_jag: 48 match, 0 vacuous, 0 mismatch, 0 not reported
+INFO  model/05_agent_payment_mandate: 50 match, 0 vacuous, 0 mismatch, 0 not reported
+INFO  model/06_audience_injection: 21 match, 2 vacuous, 0 mismatch, 0 not reported
+INFO  model/07_confused_deputy_proxy: 12 match, 0 vacuous, 0 mismatch, 0 not reported
+INFO  model/08_token_passthrough: 16 match, 2 vacuous, 0 mismatch, 0 not reported
+INFO  model/09_scope_step_up: 48 match, 0 vacuous, 0 mismatch, 0 not reported
+SUMMARY pass=3 diff=0 info=13

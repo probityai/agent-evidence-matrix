@@ -219,3 +219,37 @@ def test_freshness_reads_every_pinned_repository_of_a_project():
     p["upstream"]["also"] = [{"url": "https://github.com/example/other", "sha": "c" * 40}]
     lines = bm.freshness(matrix(p), lambda o, r: "a" * 40)
     assert lines == ["project 1: upstream-moved, pinned cccccccccccc, example/other head aaaaaaaaaaaa"]
+
+
+def test_the_named_reader_is_the_pinned_reader():
+    """The README tells readers to install requirements.txt; MATRIX.md names the reader from matrix.json.
+    A pin bump in one file and not the other would publish runs under a reader nobody installed."""
+    data = json.loads((ROOT / "matrix.json").read_text())
+    assert bm.reader_problems(data["reader"], bm.reader_sources()) == []
+    pins = "agent-evidence-vectors==0.37.0\nagent_evidence_verify==0.5.1  # comment\nrfc8785==0.1.4\n"
+    named = {"agent-evidence-vectors": "0.37.0", "agent-evidence-verify": "0.5.1"}
+    assert bm.reader_problems(named, {"requirements.in": pins}) == []
+    out = bm.reader_problems({"agent-evidence-vectors": "0.36.3", "agent-evidence-verify": "0.5.1"},
+                             {"requirements.in": pins})
+    assert out == ["matrix.json: reader agent-evidence-vectors 0.36.3 but requirements.in pins 0.37.0"]
+    out = bm.reader_problems({"agent-evidence-admission": "0.1.0"}, {"requirements.in": pins})
+    assert out and "not pinned" in out[0]
+    assert bm.reader_problems({}, {"requirements.in": pins}) == ["matrix.json: no reader named"]
+
+
+def test_the_installed_lock_and_workflow_pins_cannot_drift_from_the_named_reader():
+    """Second break pass: requirements.txt (what CI installs) pinning 0.37.0, or a workflow installing 0.37.0 by
+    name, passed while matrix.json and requirements.in said 0.36.3; an extra or a marker read as a mismatch."""
+    named = {"agent-evidence-vectors": "0.36.3"}
+    lock = "agent-evidence-vectors==0.37.0 \\\n    --hash=sha256:00\n"
+    out = bm.reader_problems(named, {"requirements.in": "agent-evidence-vectors==0.36.3\n", "requirements.txt": lock})
+    assert out == ["matrix.json: reader agent-evidence-vectors 0.36.3 but requirements.txt pins 0.37.0"]
+    flow = "      - run: pip install ../eatf/lib-python agent-evidence-vectors==0.37.0\n"
+    out = bm.reader_problems(named, {".github/workflows/matrix.yml": flow})
+    assert out == ["matrix.json: reader agent-evidence-vectors 0.36.3 but .github/workflows/matrix.yml pins 0.37.0"]
+    assert bm.reader_problems(named, {".github/workflows/other.yml": "- run: pip install rfc8785==0.1.4\n"}) == []
+    two = "agent-evidence-vectors==0.36.3\nagent-evidence-vectors==0.37.0\n"
+    assert bm.reader_problems(named, {"requirements.in": two}) == [
+        "matrix.json: reader agent-evidence-vectors 0.36.3 but requirements.in pins 0.36.3, 0.37.0"]
+    spelled = "Agent.Evidence_Vectors[cli]==0.36.3 ; python_version >= '3.10'\n"
+    assert bm.reader_problems(named, {"requirements.in": spelled}) == []

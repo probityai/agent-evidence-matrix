@@ -38,6 +38,12 @@ jobs:
       - name: Read the fresh transcripts against the retained table
         run: |
           python3 -I adapters/mcp_auth_tamarin_adapter.py records/mcp-auth-tamarin "$RUNNER_TEMP/results" | tee "$RUNNER_TEMP/reproof-run.txt"
+      # The recorded re-proof (adapters/mcp-auth-tamarin-reproof-run.txt) and the digests of the binaries that ran it
+      # are the matrix cell's evidence: a later run that differs in either fails here instead of passing silently.
+      - name: The fresh re-proof equals the recorded one
+        run: |
+          tail -n +2 adapters/mcp-auth-tamarin-reproof-run.txt | diff - "$RUNNER_TEMP/reproof-run.txt"
+          diff records/mcp-auth-tamarin/reproof-binaries.txt "$RUNNER_TEMP/binaries.txt"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
