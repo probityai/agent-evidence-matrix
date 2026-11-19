@@ -301,6 +301,22 @@ Upstream: https://github.com/billwuqin/Agent-Observability-Intervention-Control 
 git clone https://github.com/billwuqin/Agent-Observability-Intervention-Control /tmp/icon && git -C /tmp/icon checkout 8d370de7e09d2fe5d9efa93120e564cd825331fc && venv/bin/python -I adapters/icon_agentops.py "/tmp/icon/Hackathon/IETF 127/running code/agentops"
 ```
 
+### 13. ATX (Agent Trust eXtension) credentials
+
+Upstream: https://github.com/opena2a-standards/atx-spec at 46c34fc288c8f39756c67786a9fa1531306ed231
+
+```
+git clone https://github.com/opena2a-standards/atx-conformance /tmp/atx && git -C /tmp/atx checkout 5f260e15eaadd92b290303e54384a3a30342f804 && for f in records/atx/*.json; do cmp "$f" "/tmp/atx/fixtures/$(basename "$f")" || exit 1; done && venv/bin/python adapters/atx_layers.py records/atx
+```
+
+### 14. AI Runtime Evidence Protocol (AIREP)
+
+Upstream: https://github.com/halvrenofviryel/ai-runtime-evidence-protocol at 3d62af2a3c217939a3556b741550c2563430322f
+
+```
+git clone https://github.com/halvrenofviryel/ai-runtime-evidence-protocol /tmp/airep && git -C /tmp/airep checkout 3d62af2a3c217939a3556b741550c2563430322f && venv/bin/python -B adapters/airep_adapter.py /tmp/airep
+```
+
 ### 15. Agent Execution Evidence (draft-thaha-scitt-agent-execution-evidence-02)
 
 Upstream: https://github.com/devinwarp/sijil-ietf at 3cdcf0bd943087e692e8fde326b41b183ea8b125

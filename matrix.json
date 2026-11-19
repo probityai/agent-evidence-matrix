@@ -872,7 +872,12 @@
           "divergence_in": "their code",
           "declared_revision": "RFC 8785 number serialization, which the suite's vendored serializer refuses for floating-point values by design (atx-spec core.md 1.3a.2 rule 3)"
         }
-      ]
+      ],
+      "upstream": {
+        "url": "https://github.com/opena2a-standards/atx-spec",
+        "sha": "46c34fc288c8f39756c67786a9fa1531306ed231"
+      },
+      "replay": "git clone https://github.com/opena2a-standards/atx-conformance /tmp/atx && git -C /tmp/atx checkout 5f260e15eaadd92b290303e54384a3a30342f804 && for f in records/atx/*.json; do cmp \"$f\" \"/tmp/atx/fixtures/$(basename \"$f\")\" || exit 1; done && venv/bin/python adapters/atx_layers.py records/atx"
     },
     {
       "id": 14,
@@ -925,7 +930,12 @@
           "verdict": "not run",
           "evidence": "adapters/airep_adapter.py: only scoped AIREP replay; no general cross-format interoperability claim"
         }
-      ]
+      ],
+      "upstream": {
+        "url": "https://github.com/halvrenofviryel/ai-runtime-evidence-protocol",
+        "sha": "3d62af2a3c217939a3556b741550c2563430322f"
+      },
+      "replay": "git clone https://github.com/halvrenofviryel/ai-runtime-evidence-protocol /tmp/airep && git -C /tmp/airep checkout 3d62af2a3c217939a3556b741550c2563430322f && venv/bin/python -B adapters/airep_adapter.py /tmp/airep"
     },
     {
       "id": 15,
