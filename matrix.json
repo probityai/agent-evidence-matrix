@@ -498,14 +498,20 @@
           "source": "our adapter",
           "verdict": "contradicted",
           "detail": "3 of 5 cases agree; differs on future_F_plus_1 (500,001 us ahead with dispersion 100: package intact, draft REJECT) and overflow_W_max; same in the npm dist. Draft-12 section 13.3 discloses the symmetric freshness helper. Spec: 'Dispersion extends only the past-freshness bound; it MUST NOT extend the future-skew allowance.'. The current module (HEAD e123ba9) follows draft-13 here; see the HEAD cell.",
-          "evidence": "adapters/tttps-run.txt (adapters/tttps_pot_adapter.py)"
+          "evidence": "adapters/tttps-run.txt (adapters/tttps_pot_adapter.py)",
+          "basis": "revision-skew",
+          "divergence_in": "their code",
+          "declared_revision": "draft-12 section 2.5 step 4 and Appendix C.6; section 13.3 of draft-12 discloses the symmetric freshness helper, and the current module at e123ba9 follows draft-13"
         },
         {
           "cell": "holder binding transcript of 0.4.7 against draft-12 section 6.1",
           "source": "our adapter",
           "verdict": "contradicted",
           "detail": "binding_input and exporter context differ (81 octets each, different bytes: package uses ctx_id||nonce, draft-12 uses record_hash); draft-12 sections 6.1 and 13.3 disclose the draft-11 transcript. The current module (HEAD e123ba9) follows draft-13 here; see the HEAD cell.",
-          "evidence": "adapters/tttps-run.txt (adapters/tttps_pot_adapter.py)"
+          "evidence": "adapters/tttps-run.txt (adapters/tttps_pot_adapter.py)",
+          "basis": "revision-skew",
+          "divergence_in": "their code",
+          "declared_revision": "draft-12 section 6.1; section 13.3 of draft-12 discloses the draft-11 transcript, and the current module at e123ba9 follows draft-13"
         },
         {
           "cell": "live conformance API kpp.kenosian.com/api/verify and api.kenosian.com:8090",
@@ -861,7 +867,10 @@
           "source": "our adapter",
           "verdict": "contradicted",
           "detail": "11 of 53",
-          "evidence": "adapters/atx-jcs-run.txt: the 11 floating-point vectors refused by design (ATX signs no such number), 42 of 53 agree; replayed outside the packaged harness"
+          "evidence": "adapters/atx-jcs-run.txt: the 11 floating-point vectors refused by design (ATX signs no such number), 42 of 53 agree; replayed outside the packaged harness",
+          "basis": "defect",
+          "divergence_in": "their code",
+          "declared_revision": "RFC 8785 number serialization, which the suite's vendored serializer refuses for floating-point values by design (atx-spec core.md 1.3a.2 rule 3)"
         }
       ]
     },
@@ -888,7 +897,10 @@
           "source": "our adapter",
           "verdict": "contradicted",
           "detail": "intentional unequal digests, despite valid signatures",
-          "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+          "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)",
+          "basis": "defect",
+          "divergence_in": "their records",
+          "declared_revision": "AIREP v0.2 fixture examples/v02/fixtures/toctou-mismatch.json (the unequal digests are the fixture's intent)"
         },
         {
           "cell": "authorized/executed action digest equality: no-execution fixture",
@@ -902,7 +914,10 @@
           "source": "our adapter",
           "verdict": "contradicted",
           "detail": "17 agree, 1 contradicted (CLS-XT1 expected-projection defect); all 18 raw outputs reproduced byte-exact",
-          "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)"
+          "evidence": "adapters/airep-run.txt (adapters/airep_adapter.py)",
+          "basis": "defect",
+          "divergence_in": "corpus",
+          "declared_revision": "Certisyn handoff corpus v0.1 (the original v0.2 handoff corpus); CLS-XT1's expected projection is the defect"
         },
         {
           "cell": "AIREP records through the shared agent-evidence-verify reader",
@@ -1001,7 +1016,10 @@
           "source": "our adapter",
           "verdict": "contradicted",
           "detail": "1 forged packet, 2 runs, both differ from the draft. Draft -01 Section 4.2: scope_conformance \"MUST be re-derived by the verifier from recorded inputs, never asserted without re-derivation\"; Section 5: the shipped verifier \"recomputes ... the scope verdict from the recorded intent scope and executed action\". The valid vector rebuilt with executed amount 9999.00 against intent max_amount 5000.00, verdict left IN_SCOPE, every hash and the chain recomputed and the receipt re-signed: their verify.py at the pinned commit prints VERIFIED (exit 0), and still prints VERIFIED with that signing key pinned through --receipt-public-key, which is the case of a trusted key holder signing a verdict its own recorded inputs do not support. Their verify_scope_conformance checks that manifest headline, receipt and ScopeEvaluated event agree and that scope_hash and action_hash recompute; it does not derive the verdict. Control: the same packet with one signature character changed is refused (exit 1, VERIFICATION FAILED). Clean rerun from a fresh export at the pin is byte-identical.",
-          "evidence": "adapters/actaseal-dispute-run.txt, cases draft-s4.2-s5/* and forged/* (adapters/actaseal_dispute_adapter.py)"
+          "evidence": "adapters/actaseal-dispute-run.txt, cases draft-s4.2-s5/* and forged/* (adapters/actaseal_dispute_adapter.py)",
+          "basis": "defect",
+          "divergence_in": "their code",
+          "declared_revision": "draft-xg-payment-dispute-profile-01 sections 4.2 and 5, verifier actaseal-verify at b862d1014c33"
         }
       ],
       "upstream": {

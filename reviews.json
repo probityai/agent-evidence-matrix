@@ -40,10 +40,10 @@
     },
     {
       "project": 7,
-      "review": "R-2026-11-15-07",
-      "date": "2026-11-15",
+      "review": "R-2026-11-19-07",
+      "date": "2026-11-19",
       "state": "frozen",
-      "digest": "2e6a643c0daa10b465c5771e4f363b8f4a309c3d0a813e76a8b0db934ebff4f6"
+      "digest": "f4f362bcc735e1e69df11bb3b6f12298e3757960b208c81dcf3f80883392009c"
     },
     {
       "project": 8,
@@ -77,17 +77,17 @@
     },
     {
       "project": 13,
-      "review": "R-2026-11-15-13",
-      "date": "2026-11-15",
+      "review": "R-2026-11-19-13",
+      "date": "2026-11-19",
       "state": "frozen",
-      "digest": "e829ce39c18828d525065b0dd1839732186fe07a7ca2d8f978c0982a7a5be170"
+      "digest": "c66abbae14cf09f677855f1fecb69257229afd607148abe7aaf200b22a9ed5c8"
     },
     {
       "project": 14,
-      "review": "R-2026-11-15-14",
-      "date": "2026-11-15",
+      "review": "R-2026-11-19-14",
+      "date": "2026-11-19",
       "state": "frozen",
-      "digest": "ee61cd291afd57140d50b9a049d64321001bbb4c173c8dbd72c461f7c2b4c984"
+      "digest": "beb6bff81d5a3b8f105638d7904c71f3f338742220098720398013dd8404f841"
     },
     {
       "project": 15,
@@ -103,10 +103,10 @@
     },
     {
       "project": 17,
-      "review": "R-2026-11-15-17",
-      "date": "2026-11-15",
+      "review": "R-2026-11-19-17",
+      "date": "2026-11-19",
       "state": "frozen",
-      "digest": "981f94c0694a6c8378f48c2d92813c0dd0e11918234e7bd807c140b5cc054577"
+      "digest": "29df27dfaa89a94685a00830a82b68356ee351da0ce9da51ae11ec6940668158"
     },
     {
       "project": 18,

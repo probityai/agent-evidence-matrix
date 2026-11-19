@@ -144,6 +144,17 @@ def _upstream_problems(pid, up: dict) -> list[str]:
     return out
 
 
+def _contradiction_problems(where: str, cell: dict) -> list[str]:
+    """A contradicted cell names its basis, where the divergence sits and the revision it was judged against."""
+    if cell.get("verdict") != "contradicted":
+        return []
+    out = [f"{where}: a contradicted cell needs {key}"
+           for key in ("basis", "divergence_in", "declared_revision") if not cell.get(key)]
+    if cell.get("basis") == "declared-profile":
+        out.append(f"{where}: a refusal inside a declared profile is unsupported, not contradicted")
+    return out
+
+
 def _cell_problems(where: str, cell: dict, codes: set[str], root: pathlib.Path) -> list[str]:
     out = []
     verdict = cell.get("verdict")
@@ -159,12 +170,7 @@ def _cell_problems(where: str, cell: dict, codes: set[str], root: pathlib.Path) 
         out.append(f"{where}: basis {basis!r} is not one of {list(BASIS)}")
     if cell.get("divergence_in") is not None and cell["divergence_in"] not in DIVERGENCE_IN:
         out.append(f"{where}: divergence_in {cell['divergence_in']!r} is not one of {list(DIVERGENCE_IN)}")
-    if verdict == "contradicted":
-        for key in ("basis", "divergence_in", "declared_revision"):
-            if not cell.get(key):
-                out.append(f"{where}: a contradicted cell needs {key}")
-        if basis == "declared-profile":
-            out.append(f"{where}: a refusal inside a declared profile is unsupported, not contradicted")
+    out += _contradiction_problems(where, cell)
     if basis == "declared-profile":
         if verdict != "unsupported":
             out.append(f"{where}: basis declared-profile requires verdict unsupported")
@@ -351,6 +357,9 @@ def problems(data: dict, reviews: dict, root: pathlib.Path = ROOT) -> list[str]:
                            f"(recorded {str(review.get('digest'))[:12]}, now {project_digest(project)[:12]})")
             # The digest pins the entry's bytes, not the files it cites: a frozen row still needs its evidence.
             out += _frozen_path_problems(pid, project, root)
+            # The freeze fixes the bytes, not the labelling rule: a contradicted cell still names its basis.
+            for i, cell in enumerate(project.get("cells") or [], 1):
+                out += _contradiction_problems(f"project {pid} (frozen) cell {i}", cell)
             continue
         out += _project_problems(project, codes, root)
     return out

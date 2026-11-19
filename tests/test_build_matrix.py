@@ -69,6 +69,19 @@ def test_a_frozen_project_keeps_its_bytes():
     assert any("frozen and the entry changed" in line for line in out)
 
 
+def test_a_frozen_contradicted_cell_without_a_basis_is_refused():
+    p = project(1, [cell(verdict="contradicted")])
+    out = check(p, frozen=[p])
+    for key in ("basis", "divergence_in", "declared_revision"):
+        assert any("(frozen)" in line and f"needs {key}" in line for line in out)
+
+
+def test_a_frozen_contradicted_cell_with_a_basis_passes():
+    tagged = cell(verdict="contradicted", basis="defect", divergence_in="their code", declared_revision="draft-01")
+    p = project(1, [tagged])
+    assert check(p, frozen=[p]) == []
+
+
 def test_a_contradiction_needs_basis_divergence_and_revision():
     out = check(project(1, [cell(verdict="contradicted")]))
     for key in ("basis", "divergence_in", "declared_revision"):
