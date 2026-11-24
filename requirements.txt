@@ -1,8 +1,8 @@
 # Hash-pinned reader environment. Edit requirements.in, then regenerate:
 #   uv pip compile --generate-hashes --python-version 3.12 --python-platform linux --no-header requirements.in -o requirements.txt
-agent-evidence-vectors==0.36.3 \
-    --hash=sha256:210e42172511495bca47a20c88903800cf405126d7f956bb4be839f354052764 \
-    --hash=sha256:c2a8c01e6e5f777405b6102511b2ce147a6fdae7a2a13ca80fbe9c6bdbac2a34
+agent-evidence-vectors==0.37.1 \
+    --hash=sha256:2325c4a90650fd59282422c274edeb46b9755636b74f7d0007d61a6ae0c9b09d \
+    --hash=sha256:d3ffb30aee82cec5334ea1db2dac723e3042ad20e005dcaaa17074f5824a24b6
     # via -r requirements.in
 agent-evidence-verify==0.7.0 \
     --hash=sha256:413d1fd5a773a37a8d1c64995cd355f9a1c23805e5d073e75298669a65f84499 \
